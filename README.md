@@ -25,10 +25,15 @@ new client connected id:  gbyoWN7CmiO8Qy2bAAAB
 # keyboard shortcuts:
 
 'm' - shows a map of the world in 3D
+
 'f' - toggles to full screen
+
 'v' - toggles the vector map of the world
+
 'p' - toggles the points of interest
+
 'n' - toggles flattened map
+
 
 
 

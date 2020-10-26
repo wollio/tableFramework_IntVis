@@ -20,7 +20,7 @@ open your browser (preferably Chrome for better performance) and type 'http://lo
 
 you should see something like this in your browser and a notification on the terminal ->
 
-new client connected id:  gbyoWN7CmiO8Qy2bAAAB
+"new client connected id:  gbyoWN7CmiO8Qy2bAAAB"
 
 # keyboard shortcuts:
 

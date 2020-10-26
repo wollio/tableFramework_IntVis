@@ -278,7 +278,8 @@ function show3D(){
 	  	rotateY(radians(rMY))
 	  	rotateZ(radians(rMZ))
 	  	// fill(0,0,100)
-	  	sphere(r,8,8)
+	  	// drawing EARTH Polygon
+	  	sphere(r,32,32)
 	  	pop()
 		noLights() 
 	 	ambientLight(255, 255, 255) 

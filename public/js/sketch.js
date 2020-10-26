@@ -26,6 +26,7 @@ let testTrackDevices = []
 let threeDviewFlag = true
 let vectorMapFlag = true
 let pOIFlag = true
+let flatMapFlag = false
 let myFont
 let tableControl
 let bckColor = [0,0,0]
@@ -47,7 +48,7 @@ let pointsEarth = []
 /*  full screen */
 let elem = document.documentElement
 function openFullscreen() {
-	// alert('indeed');
+
   if (elem.requestFullscreen) {
     elem.requestFullscreen()
   } else if (elem.mozRequestFullScreen) { /* Firefox */
@@ -110,7 +111,7 @@ function handleMove(evt) {
 
 function ongoingTouchIndexById(idToFind) {
   for (var i = 0; i < ongoingTouches.length; i++) {
-    var id = ongoingTouches[i].identifier;
+    var id = ongoingTouches[i].identifier
     
     if (id == idToFind) {
       return i
@@ -244,7 +245,7 @@ function draw() {
 	show3D()
 	show2d() 
 	showPointsOfInterest(50)
-	// showFlatMap(pointsEarth, color(0,255,0))
+	showFlatMap(pointsEarth, color(0,255,0))
 	showVectorMap(pointsEarth,screenPointsEarth,color(0,0,255))
 	easycam.setCenter([0,0,0],0.0)
 
@@ -308,15 +309,16 @@ function keyTyped(){
 	if(key ==='f' || key ==='F'){
 		openFullscreen()
 	}
-
 	if(key === 'v' || key === 'V'){
 		vectorMapFlag =!vectorMapFlag
 	}
 	if(key === 'p' || key === 'P'){
 		pOIFlag = !pOIFlag
 	}
+	if(key === 'n' || key === 'N'){
+		flatMapFlag = !flatMapFlag
+	}
 }
-
 function windowResized() {
   	resizeCanvas(windowWidth, windowHeight,true)
   	if(easycamIntialized){
@@ -359,13 +361,11 @@ function listenMessages(){
 function show2d() {
 	let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
 	let testPoint2 = screenPosition(-tPE.x, tPE.y, tPE.z)
-	
 	let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
 	// in case the touch display or device is available use the touchX instead
 	if(isTouch ){
 		user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
 	}
-
 	// console.log(user.x , user.y)
 	let testPoint2Ref = createVector(testPoint2.x,testPoint2.y)
 	easycam.beginHUD()
@@ -373,7 +373,6 @@ function show2d() {
 		fill(0,0,255,100)
 		circle(touchX,touchY,50)
 	}
-
 	fill(255,0,0)
 	noStroke()
 	if(user.dist(testPoint)<55){
@@ -401,7 +400,7 @@ function show2d() {
 			}
 		})
 	}
-	easycam.endHUD() 
+	easycam.endHUD()
 }
 
 // function calculateMaps
@@ -488,41 +487,40 @@ function showVectorMap(mapPoints, screenMapPoints, farbe){
 }
 
 function showFlatMap(mapPoints,farbe){
-	let step = 15
-	let lastLat
-	let lastLong
-	let scaleX = 5 
-	let scaleY = 10
-	for ( let i = 0 ; i < mapPoints.length-step; i = i + step){
-			let lR = 400 
-			let lLat = asin(mapPoints[i].z/lR) 
-			let lLong = atan2(mapPoints[i].y, -mapPoints[i].x )			
-			lLat = lLat *  90/PI * scaleY // scaling
-			lLong = lLong * 180/PI * scaleX // scaling 
-			// mapping longitude from -180 - 180º to the other way around 
-			if(lLong<=-55){
-				lLong = map(lLong,-(180*scaleX),0,0,(180*scaleX))
-			}else{
-				lLong = map(lLong,0,(180*scaleX),-(180*scaleX),0)
-			}
-			if(i> 0){
-				let delta = fastDist(lLong,lLat,0,lastLong,lastLat,0)
-				if(delta<(4000)){
-					drawLine(lLong, lLat, 0, lastLong, lastLat, 0 ,255,255,255)
+	if(flatMapFlag){
+		let step = 15
+		let lastLat
+		let lastLong
+		let scaleX = 5 
+		let scaleY = 10
+		for ( let i = 0 ; i < mapPoints.length-step; i = i + step){
+				let lR = 400 
+				let lLat = asin(mapPoints[i].z/lR) 
+				let lLong = atan2(mapPoints[i].y, -mapPoints[i].x )			
+				lLat = lLat *  90/PI * scaleY // scaling
+				lLong = lLong * 180/PI * scaleX // scaling 
+				// mapping longitude from -180 - 180º to the other way around 
+				if(lLong<=-55){
+					lLong = map(lLong,-(180*scaleX),0,0,(180*scaleX))
+				}else{
+					lLong = map(lLong,0,(180*scaleX),-(180*scaleX),0)
 				}
-			}
-			lastLat		=	lLat
-			lastLong	=	lLong
-
-	}
-	drawLine((180*scaleX),-400,0,-(180*scaleX),400,0,255,0,0)
-	// meridian or longitude 0
-	drawLine(-110,-400,0,-110,400,0,255,0,100)
-	// equator or latitude 0
-	drawLine(-(180*scaleX),0,0,(180*scaleX),0,0,255,100,0)
-
+				if(i> 0){
+					let delta = fastDist(lLong,lLat,0,lastLong,lastLat,0)
+					if(delta<(4000)){
+						drawLine(lLong, lLat, 0, lastLong, lastLat, 0 ,255,255,255)
+					}
+				}
+				lastLat		=	lLat
+				lastLong	=	lLong
 	
-
+		}
+		drawLine((180*scaleX),-400,0,-(180*scaleX),400,0,255,0,0)
+		// meridian or longitude 0
+		drawLine(-110,-400,0,-110,400,0,255,0,100)
+		// equator or latitude 0
+		drawLine(-(180*scaleX),0,0,(180*scaleX),0,0,255,100,0)
+	}
 }
 
 function fastDist(  ax, ay,  az, bx, by, bz )
@@ -538,8 +536,6 @@ function showPointsOfInterest(amount){
 		// the screenPoisition() function projects coordinates from 3D space into the 2D projections of the Screen
 		let tZurich = screenPosition(-zurich.x,zurich.y,zurich.z)
 		let tCDMX = screenPosition(-cdmx.x,cdmx.y,cdmx.z)
-	
-	
 		for(let i = 0 ; i <amount; i++){
 			testPoints[i] = screenPosition(-pOI[i].x, pOI[i].y, pOI[i].z)
 		}
@@ -550,7 +546,6 @@ function showPointsOfInterest(amount){
 		}
 		// similar to pushMatrix()
 		easycam.beginHUD()
-			
 			for(let i = 0; i < amount;i++){
 				if(user.dist(testPoints[i])<10){
 					fill(255,255,255)
@@ -586,8 +581,6 @@ function showPointsOfInterest(amount){
 			}else{
 				circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,15)
 			}
-	
-	
 			fill(100,100,255)
 			circle(tCDMX.x + windowWidth/2,tCDMX.y + windowHeight/2,5)
 		// popMatrix()

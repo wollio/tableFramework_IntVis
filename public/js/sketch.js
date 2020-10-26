@@ -23,8 +23,9 @@ let socket = io()
 let tPS, tPE // testPointStart , testPointEnd of Spike 
 let canvas 
 let testTrackDevices = []
-let threeDviewFlag = false
-let vectorMapFlag = false
+let threeDviewFlag = true
+let vectorMapFlag = true
+let pOIFlag = true
 let myFont
 let tableControl
 let bckColor = [0,0,0]
@@ -301,36 +302,19 @@ function show3D(){
 	}
 }
 function keyTyped(){
-	if( key ==='a' || key ==='A'){
+	if( key ==='m' || key ==='m'){
 		threeDviewFlag=!threeDviewFlag
-
 	}
 	if(key ==='f' || key ==='F'){
 		openFullscreen()
 	}
-	if(key === 'y'){
-		rMX+=10
-	}
-	if(key === 'h'){
-		rMX-=10
-	}
-	if(key === 'g'){
-		rMY+=10
-	}
-	if(key === 'j'){
-		rMY-=10
-	}
-	if(key === 'i'){
-		rMZ+=10
-	}
-	if(key === 'k'){
-		rMZ-=10
-	}
-	if(key === 'v'){
+
+	if(key === 'v' || key === 'V'){
 		vectorMapFlag =!vectorMapFlag
 	}
-	rMZ
-	console.log(rMX, rMY, rMZ)
+	if(key === 'p' || key === 'P'){
+		pOIFlag = !pOIFlag
+	}
 }
 
 function windowResized() {
@@ -549,64 +533,66 @@ function fastDist(  ax, ay,  az, bx, by, bz )
 }
 // rename this function - show Points Of Interest
 function showPointsOfInterest(amount){
-	let testPoints = []
-	// the screenPoisition() function projects coordinates from 3D space into the 2D projections of the Screen
-	let tZurich = screenPosition(-zurich.x,zurich.y,zurich.z)
-	let tCDMX = screenPosition(-cdmx.x,cdmx.y,cdmx.z)
-
-
-	for(let i = 0 ; i <amount; i++){
-		testPoints[i] = screenPosition(-pOI[i].x, pOI[i].y, pOI[i].z)
-	}
-	let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
-	// in case the touch display or device is available use the touchX instead
-	if(isTouch ){
-		user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
-	}
-	// similar to pushMatrix()
-	easycam.beginHUD()
-		
-		for(let i = 0; i < amount;i++){
-			if(user.dist(testPoints[i])<10){
-				fill(255,255,255)
-				noStroke()
-				circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 15)
-				let lat = Math.asin(pOI[i].z / r )
-				let lon = Math.atan2(pOI[i].y, pOI[i].x)
-				lat = lat * 180 / Math.PI
-				lon = lon * 180 / Math.PI
-				textSize(12)
-				let latLon = 'lat : ' + lat.toFixed(3) + ' , lon : '+ lon.toFixed(3);
-				text( latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
-			}else{
-				fill(200,200,200)
-				noStroke()
-				circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 2)
-			}
+	if(pOIFlag){
+		let testPoints = []
+		// the screenPoisition() function projects coordinates from 3D space into the 2D projections of the Screen
+		let tZurich = screenPosition(-zurich.x,zurich.y,zurich.z)
+		let tCDMX = screenPosition(-cdmx.x,cdmx.y,cdmx.z)
+	
+	
+		for(let i = 0 ; i <amount; i++){
+			testPoints[i] = screenPosition(-pOI[i].x, pOI[i].y, pOI[i].z)
 		}
-		fill(255,100,100)
-		if(user.dist(tZurich)<25){
-			let lat = Math.asin(zurich.z / r)
-			let lon = Math.atan2(zurich.y,zurich.x)
-			lat = lat * 180 / PI
-			lon = lon * 180 / PI
-			textSize(16)
-			let latLon = 'ZURICH, LAT : ' + lat.toFixed(3) + ' , LON : '+ lon.toFixed(3) + ' , Z pos : ' + tZurich.z
-			if(mouseX>windowWidth/2){
-				text( latLon ,tZurich.x + windowWidth/2 - 240, tZurich.y + windowHeight/2 + 25 )
-			}else{
-				text( latLon ,tZurich.x + windowWidth/2 + 20, tZurich.y + windowHeight/2 + 25 )
-			}
-			circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,25)
-		}else{
-			circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,15)
+		let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
+		// in case the touch display or device is available use the touchX instead
+		if(isTouch ){
+			user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
 		}
-
-
-		fill(100,100,255)
-		circle(tCDMX.x + windowWidth/2,tCDMX.y + windowHeight/2,5)
-	// popMatrix()
-	easycam.endHUD()
+		// similar to pushMatrix()
+		easycam.beginHUD()
+			
+			for(let i = 0; i < amount;i++){
+				if(user.dist(testPoints[i])<10){
+					fill(255,255,255)
+					noStroke()
+					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 15)
+					let lat = Math.asin(pOI[i].z / r )
+					let lon = Math.atan2(pOI[i].y, pOI[i].x)
+					lat = lat * 180 / Math.PI
+					lon = lon * 180 / Math.PI
+					textSize(12)
+					let latLon = 'lat : ' + lat.toFixed(3) + ' , lon : '+ lon.toFixed(3);
+					text( latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
+				}else{
+					fill(200,200,200)
+					noStroke()
+					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 2)
+				}
+			}
+			fill(255,100,100)
+			if(user.dist(tZurich)<25){
+				let lat = Math.asin(zurich.z / r)
+				let lon = Math.atan2(zurich.y,zurich.x)
+				lat = lat * 180 / PI
+				lon = lon * 180 / PI
+				textSize(16)
+				let latLon = 'ZURICH, LAT : ' + lat.toFixed(3) + ' , LON : '+ lon.toFixed(3) + ' , Z pos : ' + tZurich.z
+				if(mouseX>windowWidth/2){
+					text( latLon ,tZurich.x + windowWidth/2 - 240, tZurich.y + windowHeight/2 + 25 )
+				}else{
+					text( latLon ,tZurich.x + windowWidth/2 + 20, tZurich.y + windowHeight/2 + 25 )
+				}
+				circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,25)
+			}else{
+				circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,15)
+			}
+	
+	
+			fill(100,100,255)
+			circle(tCDMX.x + windowWidth/2,tCDMX.y + windowHeight/2,5)
+		// popMatrix()
+		easycam.endHUD()
+	}
 }
 function mouseClicked() {
 

@@ -135,7 +135,7 @@ function getRandomColor(){
 
 
 function preload() {
-  	earthImg = loadImage('../imgs/earth2.jpg') 
+  	earthImg = loadImage('../imgs/earth_min.jpg') 
 	sky = loadImage('../imgs/sky.jpg') 
 	earthMap = loadTable('assets/maps/earth.csv','','')
 
@@ -246,7 +246,7 @@ function draw() {
 	show2d() 
 	showPointsOfInterest(50)
 	showFlatMap(pointsEarth, color(0,255,0))
-	showVectorMap(pointsEarth,screenPointsEarth,color(0,0,255))
+	showVectorMap(pointsEarth,screenPointsEarth,color(255,255,255))
 	easycam.setCenter([0,0,0],0.0)
 
 }

@@ -548,7 +548,7 @@ function showPointsOfInterest(amount){
 		easycam.beginHUD()
 			for(let i = 0; i < amount;i++){
 				if(user.dist(testPoints[i])<10){
-					fill(255,255,255)
+					fill(255,180,255)
 					noStroke()
 					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 15)
 					let lat = Math.asin(pOI[i].z / r )
@@ -559,7 +559,7 @@ function showPointsOfInterest(amount){
 					let latLon = 'lat : ' + lat.toFixed(3) + ' , lon : '+ lon.toFixed(3);
 					text( latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
 				}else{
-					fill(200,200,200)
+					fill(200,180,200)
 					noStroke()
 					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 2)
 				}

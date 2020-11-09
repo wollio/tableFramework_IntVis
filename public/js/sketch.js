@@ -45,6 +45,10 @@ let earthMap
 let screenPointsEarth = []
 let pointsEarth = []
 
+let futureCitiesTable
+let futureCitiesData
+let cities
+
 /*  full screen */
 let elem = document.documentElement
 function openFullscreen() {
@@ -138,6 +142,8 @@ function preload() {
   	earthImg = loadImage('../imgs/earth_min_black.jpg') 
 	sky = loadImage('../imgs/sky.jpg') 
 	earthMap = loadTable('assets/maps/earth.csv','','')
+	loadData('assets/data/future_cities.csv')
+	// futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
 
 	socket.on('connected',function(data){
 		// console.log('new client connected id:' + data.id) 
@@ -177,11 +183,27 @@ function setup() {
 
 	// CREATING A RANDOM ARRAY OF POINTS AROUND THE GLOBE
 	//  replace with csv real points or Points of Interest
-	for(let i = 0 ; i <400; i++){
+
+	cities = futureCitiesData.getColumn(0)
+	let futCities = futureCitiesData.getColumn(2)
+	let curr_lat = futureCitiesData.getColumn(27)
+	let curr_lon = futureCitiesData.getColumn(28)
+	let fut_lat = futureCitiesData.getColumn(29)
+	let fut_lon = futureCitiesData.getColumn(30)
+
+	console.log(cities.length + " total rows in table")
+	// for(let i = 0 ; i < cities.length; i ++ ){
+	// 	if(i>0){
+	// 		// console.log(cities[i] , curr_lat[i], curr_lon[i])
+	// 	}
+	// }
+	for(let i = 0 ; i <cities.length; i++){
 		// geo coordinates
 		// replace the random locations with the projects 
-		let lat = radians(random(-90,90)) 
-		let lon = radians(random(-180,180)) 
+		if(i>0){
+		let lat = radians(curr_lat[i]) 
+		let lon = radians(curr_lon[i]) 
+		// console.log(i , cities[i], lat , lon )
 		// cartesian coordinates
 		let x = r * Math.cos(lat) * Math.cos(lon)
 		let y = r * Math.cos(lat) * Math.sin(lon)
@@ -192,6 +214,7 @@ function setup() {
 		let z2 = (r+25) * Math.sin(lat)
 		// 25 is the distance or length of the spikes
 		pOI2.push(createVector(x2,y2,z2))
+		}
 	}
 	tPS = createVector()
 	tPE = createVector()
@@ -236,6 +259,7 @@ function setup() {
 	listenMessages()
 
 	// tableControl = new CenterControl(320,475)
+
 	
 }
 
@@ -244,7 +268,7 @@ function draw() {
 	let user = createVector(mouseX,mouseY)
 	show3D()
 	show2d() 
-	showPointsOfInterest(50)
+	showPointsOfInterest(cities.length-2)
 	showFlatMap(pointsEarth, color(0,255,0))
 	showVectorMap(pointsEarth,screenPointsEarth,color(255,255,255))
 	easycam.setCenter([0,0,0],0.0)
@@ -252,7 +276,7 @@ function draw() {
 }
 
 function showFlatPointsOfInterest(){
- 		for(let i = 0; i <400; i++){
+ 		for(let i = 0; i <cities.length; i++){
 			let lR = 400 
 			let lLat = asin(pOI[i].z/lR) 
 			let lLong = atan2(pOI[i].y, -pOI[i].x ) 
@@ -557,7 +581,7 @@ function showPointsOfInterest(amount){
 					lon = lon * 180 / Math.PI
 					textSize(12)
 					let latLon = 'lat : ' + lat.toFixed(3) + ' , lon : '+ lon.toFixed(3);
-					text( latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
+					text( cities[i+1]  + " , " + latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
 				}else{
 					fill(200,180,200)
 					noStroke()
@@ -602,8 +626,48 @@ function drawLine(x1, y1, z1, x2, y2, z2, r,g,b){
 }
 
 
+function loadData(path) {
+
+
+   futureCitiesData = loadTable(path, '', '')
+
+
+  // int entriesCount =0;
+  // for (TableRow row : futureCities.rows()) {
+  //   String city = row.getString("current_city");
+  //   float longitude = row.getFloat("Longitude");
+  //   float latitude = row.getFloat("Latitude");
+
+  //   String futureCity = row.getString("future_city_1_source");
+
+  //   float longFut = row.getFloat("future_long");
+  //   float latFut = row.getFloat("future_lat");
+
+  //   if (city.length()>0) {
+  //     // println(city, longitude, latitude );
+  //     cities.add(city);
+  //     geoCoords.add(new PVector(longitude, latitude));
+
+  //     futCities.add(futureCity);
+  //     futGeoCoords.add(new PVector(longFut, latFut));
+  //   }
+  // }
+  // pOIs = new PointOfInterest[cities.size()];
+  // multiplePOI();
+}
+
 
 //  ****** Classes ******
+
+class pointOfInterest {
+	constructor(x,y,z,place){
+		this.position = createVector(x,y,z)
+		this.name = place
+	}
+	update(){
+
+	}
+}
 
 // *** CLASS FOR THE TRACKED DEVICE *** //
 class TrackedDevice{

@@ -286,9 +286,9 @@ function show3D(){
 		noLights() 
 	 	ambientLight(255, 255, 255) 
 	  	// texture(sky) 
-	  	noStroke() 
-	  	fill(50,50,50)
-		sphere(r*5,6,6)
+	  	// noStroke() 
+	  	// fill(50,50,50)
+		// sphere(r*5,6,6);
 
 
 		// drawing the spikes from the Points Of Interest

@@ -286,9 +286,9 @@ function show3D(){
 		noLights() 
 	 	ambientLight(255, 255, 255) 
 	  	// texture(sky) 
-	  	// noStroke() 
-	  	// fill(50,50,50)
-		// sphere(r*5,6,6);
+	  	noStroke() 
+	  	fill(30,30,30)
+		sphere(r*5,6,6);
 
 
 		// drawing the spikes from the Points Of Interest
@@ -386,7 +386,7 @@ function show2d() {
 		circle(testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 1)
 	}
 	stroke(255,0,0)
-	strokeWeight(1)
+	strokeWeight(0.5)
 	line(testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
 	if(testTrackDevices.length>0){
 		testTrackDevices.forEach( element => {
@@ -451,7 +451,7 @@ function showVectorMap(mapPoints, screenMapPoints, farbe){
 			// beginShape()
 			stroke(farbe)
 			// fill(255,10)
-			strokeWeight(0.5)
+			strokeWeight(1.0)
 			noFill()
 			let shaped = false
 			let indexError =0

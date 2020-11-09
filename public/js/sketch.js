@@ -281,7 +281,7 @@ function show3D(){
 	  	rotateZ(radians(rMZ))
 	  	// fill(0,0,100)
 	  	// drawing EARTH Polygon
-	  	sphere(r,32,32)
+	  	sphere(r,20,20)
 	  	pop()
 		noLights() 
 	 	ambientLight(255, 255, 255) 
@@ -440,7 +440,7 @@ let calcDeltasOnce = false
 
 function showVectorMap(mapPoints, screenMapPoints, farbe){
 	if(vectorMapFlag){
-		let step = 5
+		let step = 12
 		for( let i = 0 ; i < screenMapPoints.length -step ; i = i +step){
 					let screenPoint = screenPosition(-mapPoints[i].x,mapPoints[i].y,mapPoints[i].z)
 					let screen2DVector = createVector(screenPoint.x,screenPoint.y)

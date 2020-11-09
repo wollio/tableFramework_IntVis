@@ -451,7 +451,7 @@ function showVectorMap(mapPoints, screenMapPoints, farbe){
 			// beginShape()
 			stroke(farbe)
 			// fill(255,10)
-			strokeWeight(1.5)
+			strokeWeight(0.5)
 			noFill()
 			let shaped = false
 			let indexError =0

@@ -135,7 +135,7 @@ function getRandomColor(){
 
 
 function preload() {
-  	earthImg = loadImage('../imgs/earth_min.jpg') 
+  	earthImg = loadImage('../imgs/earth_min_black.jpg') 
 	sky = loadImage('../imgs/sky.jpg') 
 	earthMap = loadTable('assets/maps/earth.csv','','')
 

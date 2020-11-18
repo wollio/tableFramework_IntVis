@@ -22,7 +22,7 @@ let socket = io()
 
 let tPS, tPE // testPointStart , testPointEnd of Spike 
 let canvas 
-let testTrackDevices = []
+let trackedDevices = []
 let threeDviewFlag = true
 let vectorMapFlag = true
 let pOIFlag = true
@@ -52,7 +52,6 @@ let cities
 /*  full screen */
 let elem = document.documentElement
 function openFullscreen() {
-
   if (elem.requestFullscreen) {
     elem.requestFullscreen()
   } else if (elem.mozRequestFullScreen) { /* Firefox */
@@ -126,7 +125,6 @@ function ongoingTouchIndexById(idToFind) {
 
 function resize(){
 	init()
-
 }
 
 function getRandomColor(){
@@ -360,11 +358,12 @@ function listenMessages(){
 		thisDevice.x = data.x * windowWidth
 		thisDevice.y = data.y * windowHeight
 		thisDevice.rotation = data.rot
-		testTrackDevices.push(thisDevice)
+		trackedDevices.push(thisDevice)
+		createHTML(data.id)
 	}) 
 	socket.on('updateDevice', function(data){
 		let id = data.id 
-		testTrackDevices.forEach( element => {
+		trackedDevices.forEach( element => {
 			if(element.uniqueId === id){
 				element.x = data.x * windowWidth
 				element.y = data.y * windowHeight
@@ -374,11 +373,12 @@ function listenMessages(){
 	})
 	socket.on('removeDevice', function(data){
 		let id = data.id 
-		testTrackDevices.forEach( function(element,index) {
+		trackedDevices.forEach( function(element,index) {
 			if(element.uniqueId == id ){
-				testTrackDevices.splice(index,1)
+				trackedDevices.splice(index,1)
 			}
 		})
+		destroyHTML(data.id)
 	}) 
 }
 
@@ -412,24 +412,63 @@ function show2d() {
 	stroke(255,0,0)
 	strokeWeight(0.5)
 	line(testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
-	if(testTrackDevices.length>0){
-		testTrackDevices.forEach( element => {
+	if(trackedDevices.length>0){
+
+		trackedDevices.forEach( element => {
 			element.calculateRange()
 			// uncomment this if the tableControl object is available
 			// tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
 		})
-		testTrackDevices.forEach(element =>{
+
+		// you can rename this trackedDevices - call them tokens for instance
+		trackedDevices.forEach(element =>{
 			if(element.inRange){
-				element.show()				
+				element.show()	
+				fill(200,0,0)
+				ellipse(element.smoothPosition.x + 100, element.smoothPosition.y+100, 20,20)
+				// if(elemnt.uniqueId == 52){ /* example of a loop accessing an specific uniqueId  to do something specific */}
+				// access the identifier : element.identifier // changes everytime you add or create a new object on screen
+				// access the uniqueId : element.uniqueId // stays the same always for each tracked object
+				text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
 			}
+			updateHTML(element.smoothPosition.x, element.smoothPosition.x,element.uniqueId)
 		})
 	}
 	easycam.endHUD()
 }
 
-// function calculateMaps
+// this function creates an HTML div element assigns the class trackedDivs to it, passes the uniqueId as id and adds some text inside
+function createHTML(id){
+	let testDiv = document.createElement("div")   // creating a new div
+	testDiv.className = "trackedDivs"
+	testDiv.innerHTML = "I'm a new div"
+	testDiv.id = id           
+	document.body.appendChild(testDiv)
+}
+// this function update the position and labesl of the tracked devices
+function updateHTML(x_pos, y_pos,tracked_id){
+	let trackedDivs = document.getElementsByClassName("trackedDivs")
+	Array.prototype.forEach.call(trackedDivs, function(element) {
+		if(element.id == tracked_id){
+			element.style.left = x_pos+'px';
+			element.style.top = y_pos+'px';
+		}
+	})
+}
+// this function destroys the html elements which are not used anymore, to avoid accumulating appended children
+function destroyHTML(tracked_id){
 
-// let logDeltaOnce = false
+	// should remove the HTML elements from past tracked devices that are not in use any more
+	let trackedDivs = document.getElementsByClassName("trackedDivs")
+	Array.prototype.forEach.call(trackedDivs, function(element) {
+		if(element.id == tracked_id){
+			// search for a function to actually remove an element from HTML
+			element.remove()
+		}
+	})
+}
+
+
 function setMap(map, mapPoints, screenMapPoints){
 
 	let mapLong = map.getColumn(0)
@@ -632,28 +671,6 @@ function loadData(path) {
    futureCitiesData = loadTable(path, '', '')
 
 
-  // int entriesCount =0;
-  // for (TableRow row : futureCities.rows()) {
-  //   String city = row.getString("current_city");
-  //   float longitude = row.getFloat("Longitude");
-  //   float latitude = row.getFloat("Latitude");
-
-  //   String futureCity = row.getString("future_city_1_source");
-
-  //   float longFut = row.getFloat("future_long");
-  //   float latFut = row.getFloat("future_lat");
-
-  //   if (city.length()>0) {
-  //     // println(city, longitude, latitude );
-  //     cities.add(city);
-  //     geoCoords.add(new PVector(longitude, latitude));
-
-  //     futCities.add(futureCity);
-  //     futGeoCoords.add(new PVector(longFut, latFut));
-  //   }
-  // }
-  // pOIs = new PointOfInterest[cities.size()];
-  // multiplePOI();
 }
 
 
@@ -734,7 +751,7 @@ class TrackedDevice{
 		this.update()
 		
 		// CONDITION DEVICE OUT OF DRAWING RANGE
-		if(this.smoothPosition.x > windowWidth || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight || this.smoothPosition.y<0){
+		if(this.smoothPosition.x > windowWidth/2 || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight/2 || this.smoothPosition.y<0){
 			// uncomment this to draw a line between the center of the drawing area and the center of the tracked device
 			// strokeWeight(2)
 			// stroke(0,255,0)
@@ -838,7 +855,8 @@ class Label{
 	}
 
 	show(){
-		
+		// mapping the rotation of the tracked device to the position of the text array
+		// if rotation 120 
 		let txtContent =[
 			"I'M A PROTOTYPE FOR TANGIBLE INTERACTION AND DATA VISUALIZATION",
 			"MOVE ME AROUND TO EXPLORE MY AFFORDANCES!",

@@ -34,6 +34,20 @@ you should see something like this in your browser and a notification on the ter
 
 'n' - toggles flattened map
 
+# Process
+
+## GEOTIFF Integrations:
+1. Add this to index.html under the libraries entries
+```html
+<script src="https://cdn.jsdelivr.net/npm/geotiff"></script>
+```
+2. Use this script to read geotiff
+```javascript
+GeoTIFF.fromUrl('../data/Beck_KG_V1_future_0p0083.tif')
+        .then(tiff => {
+            console.log(tiff);
+        });
+```
 
 
 

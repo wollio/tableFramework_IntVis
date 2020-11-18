@@ -10,6 +10,8 @@
 
 let earthImg
 let sky
+let cloudImg;
+
 let theta = 0.001
 let r = 400
 let easycam
@@ -27,7 +29,7 @@ let pOIFlag = true
 let flatMapFlag = false
 let myFont
 let tableControl
-let bckColor = [0, 0, 0]
+let bckColor = [0, 0, 0, 0]
 
 let zurich
 let cdmx
@@ -90,9 +92,13 @@ function resize() {
 
 function preload() {
 
-    //earthImg = loadImage('../imgs/earth_min.jpg');
-    earthImg = loadImage('../imgs/earth_min_black_blue_sea.png')
-    sky = loadImage('../imgs/sky.jpg')
+    //earthImg = loadImage('../imgs/earth_min_black_blue_sea.png');
+    //earthImg = loadImage('../imgs/earth_3d_noclouds_min.jpg')
+    earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
+    //earthImg = loadImage('../imgs/earth_3d.jpg');
+    //earthImg = loadImage('../imgs/world_map.svg');
+    cloudImg = loadImage('../imgs/clouds_min.png');
+    sky = loadImage('../imgs/sky2.png')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
@@ -118,6 +124,11 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight, WEBGL)
     noStroke()
     textFont(myFont)
+
+    gl = this._renderer.GL;
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    //gl.colorMask(true, true, true, false);
 
     if (!easycamIntialized) {
         easycam = new Dw.EasyCam(this._renderer, {distance: 1500, center: [0, 0, 0]})
@@ -253,6 +264,17 @@ function showFlatPointsOfInterest() {
 
 function show3D() {
     if (threeDviewFlag) {
+
+        noLights()
+        //ambientLight(255, 255, 255)
+        texture(sky)
+        //noStroke()
+        //fill(30, 30, 30)
+        sphere(r * 5, 6, 6);
+
+        fill(0, 0, 200);
+        sphere(r - 5, 20, 20);
+
         ambientLight(60, 60, 60)
         let v1 = easycam.getPosition(500)
         pointLight(255, 255, 255, v1[0], v1[1] + 300, v1[2])
@@ -268,12 +290,14 @@ function show3D() {
         // drawing EARTH Polygon
         sphere(r, 20, 20)
         pop()
-        noLights()
-        ambientLight(255, 255, 255)
-        texture(sky)
-        noStroke()
-        fill(30, 30, 30)
-        sphere(r * 5, 6, 6);
+
+        push();
+        rotateX(millis() * 0.00002);
+        texture(cloudImg);
+        sphere(r + 5, 20, 20);
+        pop();
+
+
 
 
         // drawing the spikes from the Points Of Interest
@@ -284,7 +308,7 @@ function show3D() {
         }
 
         for (let i = 0; i < co2Bubbles.length; i++) {
-            let vector = horizontalToCartesian(co2Bubbles[i].lat, co2Bubbles[i].lon, r);
+            let vector = horizontalToCartesian(co2Bubbles[i].lat, co2Bubbles[i].lon, r + 20);
             //drawSphere(vector.x, vector.y, vector.z, co2Bubbles[i].size);
         }
 
@@ -523,6 +547,13 @@ function showPointsOfInterest(amount) {
         // popMatrix()
         easycam.endHUD()
     }
+}
+
+function drawCylinder(x, y, z, size) {
+    push();
+    translate(x, y, z);
+    cylinder(5, size);
+    pop();
 }
 
 function drawLine(x1, y1, z1, x2, y2, z2, r, g, b) {

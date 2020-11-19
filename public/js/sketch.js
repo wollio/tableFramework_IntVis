@@ -97,8 +97,9 @@ function preload() {
     //earthImg = loadImage('../imgs/earth_3d_noclouds_min.jpg')
     //earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
     //earthImg = loadImage('../imgs/earth_1.png');
-    earthImg = loadImage('../imgs/earth_bw_dark_gray_sea_2.jpg');
+    //earthImg = loadImage('../imgs/earth_bw_dark_gray_sea_2.jpg');
     //earthImg = loadImage('../imgs/world_map.svg');
+    earthImg = loadImage('../imgs/earth_3d_noclouds_mono5-hires.jpg')
     cloudImg = loadImage('../imgs/clouds_min.png');
     //sky = loadImage('../imgs/sky5.jpg')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
@@ -314,6 +315,7 @@ function show2d() {
 	// console.log(user.x , user.y)
 	let testPoint2Ref = createVector(testPoint2.x,testPoint2.y)
 	easycam.beginHUD()
+
 	if(isTouch){
 		fill(0,0,255,100)
 		circle(touchX,touchY,50)
@@ -415,76 +417,6 @@ function windowResized() {
         easycam.setViewport([0, 0, windowWidth, windowHeight])
     }
     resize()
-}
-
-function show2d() {
-    let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
-    let testPoint2 = screenPosition(-tPE.x, tPE.y, tPE.z)
-    let user = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2)
-    // in case the touch display or device is available use the touchX instead
-    if (isTouch) {
-        user = createVector(touchX - windowWidth / 2, touchY - windowHeight / 2)
-    }
-    // console.log(user.x , user.y)
-    let testPoint2Ref = createVector(testPoint2.x, testPoint2.y)
-    easycam.beginHUD()
-    if (isTouch) {
-        fill(0, 0, 255, 100)
-        circle(touchX, touchY, 50)
-    }
-    fill(255, 0, 0)
-    noStroke()
-    if (user.dist(testPoint) < 55) {
-        circle(testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 10)
-    } else {
-        circle(testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 1)
-    }
-    if (user.dist(testPoint2) < 55) {
-        circle(testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 10)
-    } else {
-        circle(testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 1)
-    }
-    stroke(255, 0, 0)
-    strokeWeight(0.5)
-    line(testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
-    if (trackedDevices.length > 0) {
-        trackedDevices.forEach(element => {
-            element.calculateRange()
-            // uncomment this if the tableControl object is available
-            // tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
-        })
-        trackedDevices.forEach(element => {
-            if (element.inRange) {
-                element.show()
-            }
-        })
-    }
-    easycam.endHUD()
-}
-
-// function calculateMaps
-
-// let logDeltaOnce = false
-function setMap(map, mapPoints, screenMapPoints) {
-
-    let mapLong = map.getColumn(0)
-    let mapLat = map.getColumn(1)
-    let countTest = 0
-    console.log("total points : " + mapLong.length)
-    for (let i = 0; i < mapLong.length; i++) {
-        let latAt = radians(mapLat[i])
-        let longAt = radians(mapLong[i])
-        let point = createVector(0, 0, 0)
-        point.x = r * Math.cos(latAt) * Math.cos(longAt)
-        point.y = r * Math.cos(latAt) * Math.sin(longAt)
-        point.z = r * Math.sin(latAt)
-        mapPoints.push(point)
-        // * note for some reason, the x-projection needs to be negative (-) otherwise the maps are mirrored
-        // * it applies to all other points as well
-        let screenPoint = screenPosition(-point.x, point.y, point.z)
-        let screen2DVector = createVector(screenPoint.x, screenPoint.y)
-        screenMapPoints.push(screen2DVector)
-    }
 }
 
 let deltas = []

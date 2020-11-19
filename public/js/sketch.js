@@ -21,8 +21,8 @@ let pOI2 = []
 let socket = io()
 
 let tPS, tPE // testPointStart , testPointEnd of Spike 
-let canvas
-let testTrackDevices = []
+let canvas 
+let trackedDevices = []
 let threeDviewFlag = true
 let vectorMapFlag = true
 let pOIFlag = true
@@ -118,7 +118,10 @@ function preload() {
 
     openFullscreen()
     init()
+}
 
+function resize(){
+	init()
 }
 
 
@@ -234,8 +237,6 @@ function setup() {
     listenMessages()
 
     // tableControl = new CenterControl(320,475)
-
-
 }
 
 function draw() {
@@ -299,8 +300,97 @@ function show3D() {
         sphere(r + 5, 20, 20);
         pop();
 
+    }
+}
+
+function show2d() {
+	let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
+	let testPoint2 = screenPosition(-tPE.x, tPE.y, tPE.z)
+	let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
+	// in case the touch display or device is available use the touchX instead
+	if(isTouch ){
+		user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
+	}
+	// console.log(user.x , user.y)
+	let testPoint2Ref = createVector(testPoint2.x,testPoint2.y)
+	easycam.beginHUD()
+	if(isTouch){
+		fill(0,0,255,100)
+		circle(touchX,touchY,50)
+	}
+	fill(255,0,0)
+	noStroke()
+	if(user.dist(testPoint)<55){
+		circle(testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 10)
+	}else{	
+		circle(testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 1)
+	}
+	if(user.dist(testPoint2)<55){
+		circle(testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 10)
+	}else{	
+		circle(testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 1)
+	}
+	stroke(255,0,0)
+	strokeWeight(0.5)
+	line(testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
+	if(trackedDevices.length>0){
+
+		trackedDevices.forEach( element => {
+			element.calculateRange()
+			// uncomment this if the tableControl object is available
+			// tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
+		})
+
+		// you can rename this trackedDevices - call them tokens for instance
+		trackedDevices.forEach(element =>{
+			if(element.inRange){
+				element.show()	
+				fill(200,0,0)
+				ellipse(element.smoothPosition.x + 100, element.smoothPosition.y+100, 20,20)
+				// if(elemnt.uniqueId == 52){ /* example of a loop accessing an specific uniqueId  to do something specific */}
+				// access the identifier : element.identifier // changes everytime you add or create a new object on screen
+				// access the uniqueId : element.uniqueId // stays the same always for each tracked object
+				text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
+			}
+			updateHTML(element.smoothPosition.x, element.smoothPosition.x,element.uniqueId)
+		})
+	}
+	easycam.endHUD()
+}
+
+// this function creates an HTML div element assigns the class trackedDivs to it, passes the uniqueId as id and adds some text inside
+function createHTML(id){
+	let testDiv = document.createElement("div")   // creating a new div
+	testDiv.className = "trackedDivs"
+	testDiv.innerHTML = "I'm a new div"
+	testDiv.id = id           
+	document.body.appendChild(testDiv)
+}
+// this function update the position and labesl of the tracked devices
+function updateHTML(x_pos, y_pos,tracked_id){
+	let trackedDivs = document.getElementsByClassName("trackedDivs")
+	Array.prototype.forEach.call(trackedDivs, function(element) {
+		if(element.id == tracked_id){
+			element.style.left = x_pos+'px';
+			element.style.top = y_pos+'px';
+		}
+	})
+}
+// this function destroys the html elements which are not used anymore, to avoid accumulating appended children
+function destroyHTML(tracked_id){
+
+	// should remove the HTML elements from past tracked devices that are not in use any more
+	let trackedDivs = document.getElementsByClassName("trackedDivs")
+	Array.prototype.forEach.call(trackedDivs, function(element) {
+		if(element.id == tracked_id){
+			// search for a function to actually remove an element from HTML
+			element.remove()
+		}
+	})
+}
 
 
+function setMap(map, mapPoints, screenMapPoints) {
 
         // drawing the spikes from the Points Of Interest
         for (let i = 0; i < 400; i++) {
@@ -317,7 +407,6 @@ function show3D() {
         drawLine(-tPS.x, tPS.y, tPS.z, -tPE.x, tPE.y, tPE.z, 0, 255, 0)
 
         // showFlatPointsOfInterest();
-    }
 }
 
 function windowResized() {
@@ -358,13 +447,13 @@ function show2d() {
     stroke(255, 0, 0)
     strokeWeight(0.5)
     line(testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
-    if (testTrackDevices.length > 0) {
-        testTrackDevices.forEach(element => {
+    if (trackedDevices.length > 0) {
+        trackedDevices.forEach(element => {
             element.calculateRange()
             // uncomment this if the tableControl object is available
             // tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
         })
-        testTrackDevices.forEach(element => {
+        trackedDevices.forEach(element => {
             if (element.inRange) {
                 element.show()
             }
@@ -616,116 +705,109 @@ class pointOfInterest {
 }
 
 // *** CLASS FOR THE TRACKED DEVICE *** //
-class TrackedDevice {
-    constructor() {
-        this.uniqueId = -1
-        this.identifier = -1
-        this.x = 0.0
-        this.y = 0.0
-        this.rotation = 0.0
-        this.intensity = 0.0
-        this.dead = false
-        this.smoothPosition = createVector(0.0, 0.0)
-        this.smoothRotation = 0.0
-        this.inRange = false
-        this.angle = 0
-        this.sizeL = 180
-        this.thisLabel = new Label()
-        this.oldPos = createVector(0, 0)
+class TrackedDevice{
+	constructor(){
+		this.uniqueId = -1
+		this.identifier = -1
+		this.x = 0.0
+		this.y = 0.0
+		this.rotation =0.0
+		this.intensity = 0.0
+		this.dead = false
+		this.smoothPosition  = createVector(0.0,0.0)
+		this.smoothRotation = 0.0
+		this.inRange = false
+		this.angle = 0
+		this.sizeL = 180
+		this.thisLabel = new Label()
+		this.oldPos = createVector(0,0)
+		
+	}
+	update(){
+		let currPos = createVector ( this.x,this.y )
+		let delta = currPos.dist(this.oldPos)
+		let alpha = 0.1
+		this.smoothRotation = this.easeFloat2((360 - this.rotation), this.smoothRotation, 0.85)
+		this.smoothPosition.x = this.easeFloat2(this.x, this.smoothPosition.x, alpha)
+   		this.smoothPosition.y = this.easeFloat2(this.y, this.smoothPosition.y, alpha)
+		this.angle = Math.atan2(this.smoothPosition.y - windowHeight/2, this.smoothPosition.x - windowWidth/2) * 180 / Math.PI
+		this.oldPos.x = this.smoothPosition.x
+		this.oldPos.y = this.smoothPosition.y
+	}
+	show(){
+		let radius = 45
+		let lSize = map(this.smoothRotation,0,360,10,75)
+		let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
+		let rotY = (0+ radius) * Math.sin(radians(this.smoothRotation))
 
-    }
+		fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
+		noStroke()
+		ellipse(this.smoothPosition.x,this.smoothPosition.y,radius*2 + lSize,radius*2 + lSize)
+		fill(255,255,100)
+		stroke(0)
+		strokeWeight(10)
+		circle(this.smoothPosition.x ,this.smoothPosition.y , radius*2)
+		stroke(0)
+		strokeWeight(10)
+		line(this.smoothPosition.x , this.smoothPosition.y  , this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
 
-    update() {
-        let currPos = createVector(this.x, this.y)
-        let delta = currPos.dist(this.oldPos)
-        let alpha = 0.1
-        this.smoothRotation = this.easeFloat2((360 - this.rotation), this.smoothRotation, 0.85)
-        this.smoothPosition.x = this.easeFloat2(this.x, this.smoothPosition.x, alpha)
-        this.smoothPosition.y = this.easeFloat2(this.y, this.smoothPosition.y, alpha)
-        this.angle = Math.atan2(this.smoothPosition.y - windowHeight / 2, this.smoothPosition.x - windowWidth / 2) * 180 / Math.PI
-        this.oldPos.x = this.smoothPosition.x
-        this.oldPos.y = this.smoothPosition.y
-    }
+		// DISPLAY DEGREES OF ROTATION
+		push()
+			translate(this.smoothPosition.x+rotX, this.smoothPosition.y+rotY)
+			rotate(radians(this.smoothRotation))
+			fill(255,255,100)
+			textSize(30)
+			// text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
+			text(Math.round(this.smoothRotation,3), 30,10)
+		pop()
 
-    show() {
-        let radius = 45
-        let lSize = map(this.smoothRotation, 0, 360, 10, 75)
-        let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
-        let rotY = (0 + radius) * Math.sin(radians(this.smoothRotation))
+		// DISPLAY LABEL
+		this.thisLabel.update(this.smoothPosition.x,this.smoothPosition.y,this.sizeL, this.smoothRotation + 120)		
+		noStroke()
+	}
+	calculateRange(){
+		this.update()
+		
+		// CONDITION DEVICE OUT OF DRAWING RANGE
+		if(this.smoothPosition.x > windowWidth/2 || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight/2 || this.smoothPosition.y<0){
+			// uncomment this to draw a line between the center of the drawing area and the center of the tracked device
+			// strokeWeight(2)
+			// stroke(0,255,0)
+			// line(windowWidth/4,windowHeight/2, this.smoothPosition.x,this.smoothPosition.y)	
+			push()
+			translate(windowWidth/2,height/2)
+			rotate(radians(this.angle))
+			let sizeT = 30
+			let thisTriangle = new Triangle(windowWidth/2 - sizeT,-sizeT,sizeT)
+			thisTriangle.show()
+			pop()
 
-        fill(255, 255, 100, 25 + map(this.smoothRotation, 0, 360, 0, 150))
-        noStroke()
-        ellipse(this.smoothPosition.x, this.smoothPosition.y, radius * 2 + lSize, radius * 2 + lSize)
-        fill(255, 255, 100)
-        stroke(0)
-        strokeWeight(10)
-        circle(this.smoothPosition.x, this.smoothPosition.y, radius * 2)
-        stroke(0)
-        strokeWeight(10)
-        line(this.smoothPosition.x, this.smoothPosition.y, this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
+			this.inRange = false
+		}else{
+			this.inRange = true
+		}
+	}
+	easeFloat (target, value, alpha = 0.1) {
+    	const d = target - value
+    	return value + (d * alpha)
+  	}
+	easeFloat2 (target, value, alpha ){
+	value = value * alpha + target *(1-alpha)
+	return value
+	}
+  	easeFloatCircular (target, value, maxValue, alpha = 0.1) {
+    	let delta = target - value
+    	const altDelta = maxValue - Math.abs(delta)
 
-        // DISPLAY DEGREES OF ROTATION
-        push()
-        translate(this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
-        rotate(radians(this.smoothRotation))
-        fill(255, 255, 100)
-        textSize(30)
-        // text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
-        text(Math.round(this.smoothRotation, 3), 30, 10)
-        pop()
-
-        // DISPLAY LABEL
-        this.thisLabel.update(this.smoothPosition.x, this.smoothPosition.y, this.sizeL, this.smoothRotation + 120)
-        noStroke()
-    }
-
-    calculateRange() {
-        this.update()
-
-        // CONDITION DEVICE OUT OF DRAWING RANGE
-        if (this.smoothPosition.x > windowWidth || this.smoothPosition.x < 0 || this.smoothPosition.y > windowHeight || this.smoothPosition.y < 0) {
-            // uncomment this to draw a line between the center of the drawing area and the center of the tracked device
-            // strokeWeight(2)
-            // stroke(0,255,0)
-            // line(windowWidth/4,windowHeight/2, this.smoothPosition.x,this.smoothPosition.y)
-            push()
-            translate(windowWidth / 2, height / 2)
-            rotate(radians(this.angle))
-            let sizeT = 30
-            let thisTriangle = new Triangle(windowWidth / 2 - sizeT, -sizeT, sizeT)
-            thisTriangle.show()
-            pop()
-
-            this.inRange = false
-        } else {
-            this.inRange = true
-        }
-    }
-
-    easeFloat(target, value, alpha = 0.1) {
-        const d = target - value
-        return value + (d * alpha)
-    }
-
-    easeFloat2(target, value, alpha) {
-        value = value * alpha + target * (1 - alpha)
-        return value
-    }
-
-    easeFloatCircular(target, value, maxValue, alpha = 0.1) {
-        let delta = target - value
-        const altDelta = maxValue - Math.abs(delta)
-
-        if (Math.abs(altDelta) < Math.abs(delta)) {
-            delta = altDelta * (delta < 0 ? 1 : -1)
-        }
-        return value + (delta * alpha)
-    }
-
-    radians(degrees) {
-        let radians = degrees * (Math.PI / 180)
-        return radians
-    }
+    	if (Math.abs(altDelta) < Math.abs(delta)) {
+      		delta = altDelta * (delta < 0 ? 1 : -1)
+    	}
+		return value + (delta * alpha)
+	}
+	radians (degrees) {
+		let radians = degrees * (Math.PI / 180)
+		return radians
+	}
 }
 
 // CLASS TO DRAW THE TRIANGLE
@@ -753,84 +835,83 @@ class Triangle {
     }
 }
 
-// CLASS TO DRAW THE LABEL
 class Label {
-    constructor(x, y, size, rotation) {
-        this.x = 0
-        this.y = 0
-        this.size = 0
-        this.rotation = 0
-        this.count = 0
-        this.oldRotation = 0
-        this.oldY = 0
-        this.labelOff = false
-        this.opacity = 0
-    }
+	constructor(x,y,size, rotation){
+		this.x =0
+		this.y = 0
+		this.size = 0
+		this.rotation = 0
+		this.count = 0
+		this.oldRotation = 0
+		this.oldY = 0
+		this.labelOff=false
+		this.opacity = 0
+	}
+	update(x,y,size,rotation){
 
-    update(x, y, size, rotation) {
+		this.x = x
+		this.y = y
+		this.size = size
+		this.rotation = Math.round(rotation)
 
-        this.x = x
-        this.y = y
-        this.size = size
-        this.rotation = Math.round(rotation)
+		if(this.rotation!=this.oldRotation){
+			this.count=30
+			this.labelOff = false
 
-        if (this.rotation != this.oldRotation) {
-            this.count = 30
-            this.labelOff = false
+		}else{
+			if(this.count>0){
+				this.count --
+			}else{
+				this.labelOff = true
+			}
+		}
+		this.opacity = map(this.count,0,30,0,255)
+		if(!this.labelOff){
+			this.show()
+		}
+		
+		this.oldRotation = this.rotation
 
-        } else {
-            if (this.count > 0) {
-                this.count--
-            } else {
-                this.labelOff = true
-            }
-        }
-        this.opacity = map(this.count, 0, 30, 0, 255)
-        if (!this.labelOff) {
-            this.show()
-        }
+	}
 
-        this.oldRotation = this.rotation
+	show(){
+		// mapping the rotation of the tracked device to the position of the text array
+		// if rotation 120 
+		let txtContent =[
+			"I'M A PROTOTYPE FOR TANGIBLE INTERACTION AND DATA VISUALIZATION",
+			"MOVE ME AROUND TO EXPLORE MY AFFORDANCES!",
+			"STUDENTS FROM INTERACTION DESIGN USE ME TO EXPLORE THEIR CONCEPTS",
+			"DESIGN ... TECHNOLOGY ... THINKING ... CONCEIVING ...  DOING ...  ",
+			"PROTOTYPING"
+		]
+		let peak = 10
+		
+		
+		let offX=120
+		let offY=0
+		push()
+		strokeWeight(5)
+		stroke(255,255,100,this.opacity)
+		// fill(100,0,0,this.opacity)
+		noFill()
+		translate(this.x,this.y)
+		rotate(radians(this.rotation))
+		beginShape()
+		vertex(offX,offY)
+		vertex(offX+peak, offY-peak)
+		vertex(offX+peak,offY-this.size/3)
+		vertex(offX+peak+this.size, offY-this.size/3)
+		vertex(offX+peak+this.size,offY+this.size/3)
+		vertex(offX+peak, offY+this.size/3)
+		vertex(offX+peak,offY+peak)
+		endShape(CLOSE)
+		textSize(16)
+		fill(255,255,100,this.opacity)
+		textAlign(CENTER,CENTER)
+		text(txtContent[int(map(this.rotation,1,360,-1,4))],offX +30 , offY - this.size/4, this.size-25, this.size/2 )
+		pop()
 
-    }
-
-    show() {
-
-        let txtContent = [
-            "I'M A PROTOTYPE FOR TANGIBLE INTERACTION AND DATA VISUALIZATION",
-            "MOVE ME AROUND TO EXPLORE MY AFFORDANCES!",
-            "STUDENTS FROM INTERACTION DESIGN USE ME TO EXPLORE THEIR CONCEPTS",
-            "DESIGN ... TECHNOLOGY ... THINKING ... CONCEIVING ...  DOING ...  ",
-            "PROTOTYPING"
-        ]
-        let peak = 10
-
-
-        let offX = 120
-        let offY = 0
-        push()
-        strokeWeight(5)
-        stroke(255, 255, 100, this.opacity)
-        // fill(100,0,0,this.opacity)
-        noFill()
-        translate(this.x, this.y)
-        rotate(radians(this.rotation))
-        beginShape()
-        vertex(offX, offY)
-        vertex(offX + peak, offY - peak)
-        vertex(offX + peak, offY - this.size / 3)
-        vertex(offX + peak + this.size, offY - this.size / 3)
-        vertex(offX + peak + this.size, offY + this.size / 3)
-        vertex(offX + peak, offY + this.size / 3)
-        vertex(offX + peak, offY + peak)
-        endShape(CLOSE)
-        textSize(16)
-        fill(255, 255, 100, this.opacity)
-        textAlign(CENTER, CENTER)
-        text(txtContent[int(map(this.rotation, 1, 360, -1, 4))], offX + 30, offY - this.size / 4, this.size - 25, this.size / 2)
-        pop()
-
-    }
+	}
 }
 
 

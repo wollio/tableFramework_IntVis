@@ -59,5 +59,24 @@ body {
 
 }
 
+.trackedDivs{
+
+	background-color: #00ff00 !important;
+	width: 50px !important;
+	transition: background-color 0.5s, width 0.5s;
+
+	position :absolute;
+	background-color :#ff0000;
+	width :100px;
+	height:100px;
+	color :#ffffff;
+	z-index :10000;
+
+}
+.trackedDivs:hover{
+	background-color: #0000ff !important;
+	width: 250px !important;
+}
+
 
 

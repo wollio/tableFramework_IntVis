@@ -211,23 +211,23 @@ function addScreenPositionFunction(p5Instance) {
 
 			// Transform the vector to Normalized Device Coordinate.
 			let vNDC = multMatrixVector(mvp, v);
-			let vNDC2 = multMatrixVector(mvp,v2);
+			// let vNDC2 = multMatrixVector(mvp,v2);
 
 			// Transform vector from NDC to Canvas coordinates.
 			let vCanvas = p.createVector();
 			vCanvas.x = 0.5 * vNDC.x * p.width;
 			vCanvas.y = 0.5 * -vNDC.y * p.height;
 			// in case you prefer to ignore z set it to 0
-			// vCanvas.z = 0;
+			vCanvas.z = 0;
 
 
 			// to know if z in front or behind the earth / spherical projection
-			if(vNDC2.z>vNDC.z){
-				vCanvas.z = 1
-			}else{
-				vCanvas.z = -1
-			}
-			vCanvas.z = vNDC2.z-vNDC.z
+			// if(vNDC2.z>vNDC.z){
+			// 	vCanvas.z = 1
+			// }else{
+			// 	vCanvas.z = -1
+			// }
+			// vCanvas.z = vNDC2.z-vNDC.z
 
 			return vCanvas;
 		}

@@ -24,7 +24,7 @@ let tPS, tPE // testPointStart , testPointEnd of Spike
 let canvas 
 let trackedDevices = []
 let threeDviewFlag = true
-let vectorMapFlag = true
+let vectorMapFlag = false
 let pOIFlag = true
 let flatMapFlag = false
 let myFont
@@ -50,13 +50,25 @@ let futureCitiesTable
 let futureCitiesData
 let cities
 
+
+// setting variables for loading geoTIFF data
+let co2
+let refrst
+
+// these variables are the array lists of objects containing data points extracted form the
+// simplified geoTIFF image(s)
+// remember always to declare arrays as empty using square brackets: "let yourArrayName = []"
+let pntsFromTIFF_co2  = []
+let pntsFromTIFF_refrst = []
+
+let flagCO2Data = true
+let flagRfrsData = true
+
+let flagDataVisStyleCO2 = false
+let flagDataVisStyleRfrst = true
+
 /*  full screen */
 let elem = document.documentElement
-
-let co2Bubbles = [];
-
-
-
 
 function init() {
 
@@ -74,6 +86,9 @@ function preload() {
     //sky = loadImage('../imgs/sky5.jpg')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
+
+    co2 = loadImage('assets/data/co2_emissions.png')
+	  refrst = loadImage('assets/data/geodata_ref_potential.png')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
 
     socket.on('connected', function (data) {
@@ -105,6 +120,10 @@ function setup() {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     //gl.colorMask(true, true, true, false);
+
+    // resizing / downscaling the resolution of the image-data
+    co2.resize(windowWidth/8, windowHeight/8)
+    refrst.resize(windowWidth/8, windowHeight/8)
 
     if (!easycamIntialized) {
         easycam = new Dw.EasyCam(this._renderer, {distance: 1500, center: [0, 0, 0]})
@@ -207,6 +226,19 @@ function setup() {
     let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
     listenMessages()
 
+    // here we are calling the function dataFromTIFFtoArray
+ 	// which you can find on the file sketch_extend.js inside the same js folder
+ 	// this function reads each pixel and passes its x y location to a custom
+ 	// data point object, which converts the x y to 3D point in an spheric system
+ 	// the points contain x y location in 2D geo system(lon lat) as well as 3D xyz
+ 	// as well as a value, which is just the brightness of each pixel
+ 	// once the pixel is handeld an object is created and pushed into the list in the draw we access
+ 	// this list and iterate through each of the data points in order to visualize them or interact
+ 	// from co2
+ 	dataFromTIFFtoArray(co2,pntsFromTIFF_co2,5.0)
+ 	// from rfrst
+ 	dataFromTIFFtoArray(refrst,pntsFromTIFF_refrst,1.0)
+
     // tableControl = new CenterControl(320,475)
 }
 
@@ -219,6 +251,16 @@ function draw() {
     showFlatMap(pointsEarth, color(0, 255, 0))
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
+
+    // here we call the function visualize and pass the desired arraylist
+ 	// which will iterate through each data point and visualize it
+ 	// the flag is a boolean to display or hide the visualization
+ 	if(flagCO2Data){
+    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
+  }
+  if(flagRfrsData){
+    visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
+  }
 }
 
 function showFlatPointsOfInterest() {
@@ -593,16 +635,3 @@ function loadData(path) {
     // pOIs = new PointOfInterest[cities.size()];
     // multiplePOI();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

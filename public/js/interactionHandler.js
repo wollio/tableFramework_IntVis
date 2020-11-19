@@ -56,6 +56,18 @@ function keyTyped(){
     if(key === 'n' || key === 'N'){
         flatMapFlag = !flatMapFlag
     }
+    if(key === 'c' || key === 'C'){
+        flagCO2Data = !flagCO2Data
+    }
+    if(key === 'k' || key === 'K'){
+        flagDataVisStyleCO2 = !flagDataVisStyleCO2
+    }
+    if(key === 'r' || key === 'R'){
+        flagRfrsData = !flagRfrsData
+    }
+    if(key === 'l' || key === 'L'){
+        flagDataVisStyleRfrst = !flagDataVisStyleRfrst
+    }
 }
 
 function mouseClicked() {

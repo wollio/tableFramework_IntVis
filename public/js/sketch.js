@@ -24,7 +24,7 @@ let tPS, tPE // testPointStart , testPointEnd of Spike
 let canvas 
 let trackedDevices = []
 let threeDviewFlag = true
-let vectorMapFlag = true
+let vectorMapFlag = false
 let pOIFlag = true
 let flatMapFlag = false
 let myFont
@@ -49,6 +49,23 @@ let pointsEarth = []
 let futureCitiesTable
 let futureCitiesData
 let cities
+
+
+// setting variables for loading geoTIFF data
+let co2
+let refrst
+
+// these variables are the array lists of objects containing data points extracted form the
+// simplified geoTIFF image(s)
+// remember always to declare arrays as empty using square brackets: "let yourArrayName = []"
+let pntsFromTIFF_co2  = []
+let pntsFromTIFF_refrst = []
+
+let flagCO2Data = true
+let flagRfrsData = true
+
+let flagDataVisStyleCO2 = false
+let flagDataVisStyleRfrst = true
 
 /*  full screen */
 let elem = document.documentElement
@@ -103,6 +120,9 @@ function preload() {
     //sky = loadImage('../imgs/sky5.jpg')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
+
+    co2 = loadImage('assets/data/co2_emissions.png')
+	  refrst = loadImage('assets/data/geodata_ref_potential.png')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
 
     socket.on('connected', function (data) {
@@ -134,6 +154,10 @@ function setup() {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     //gl.colorMask(true, true, true, false);
+
+    // resizing / downscaling the resolution of the image-data
+    co2.resize(windowWidth/8, windowHeight/8)
+    refrst.resize(windowWidth/8, windowHeight/8)
 
     if (!easycamIntialized) {
         easycam = new Dw.EasyCam(this._renderer, {distance: 1500, center: [0, 0, 0]})
@@ -236,6 +260,19 @@ function setup() {
     let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
     listenMessages()
 
+    // here we are calling the function dataFromTIFFtoArray
+ 	// which you can find on the file sketch_extend.js inside the same js folder
+ 	// this function reads each pixel and passes its x y location to a custom
+ 	// data point object, which converts the x y to 3D point in an spheric system
+ 	// the points contain x y location in 2D geo system(lon lat) as well as 3D xyz
+ 	// as well as a value, which is just the brightness of each pixel
+ 	// once the pixel is handeld an object is created and pushed into the list in the draw we access
+ 	// this list and iterate through each of the data points in order to visualize them or interact
+ 	// from co2
+ 	dataFromTIFFtoArray(co2,pntsFromTIFF_co2,5.0)
+ 	// from rfrst
+ 	dataFromTIFFtoArray(refrst,pntsFromTIFF_refrst,1.0)
+
     // tableControl = new CenterControl(320,475)
 }
 
@@ -248,6 +285,16 @@ function draw() {
     showFlatMap(pointsEarth, color(0, 255, 0))
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
+
+    // here we call the function visualize and pass the desired arraylist
+ 	// which will iterate through each data point and visualize it
+ 	// the flag is a boolean to display or hide the visualization
+ 	if(flagCO2Data){
+    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
+  }
+  if(flagRfrsData){
+    visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
+  }
 }
 
 function showFlatPointsOfInterest() {
@@ -691,230 +738,3 @@ function loadData(path) {
     // pOIs = new PointOfInterest[cities.size()];
     // multiplePOI();
 }
-
-//  ****** Classes ******
-class pointOfInterest {
-    constructor(x, y, z, place) {
-        this.position = createVector(x, y, z)
-        this.name = place
-    }
-
-    update() {
-
-    }
-}
-
-// *** CLASS FOR THE TRACKED DEVICE *** //
-class TrackedDevice{
-	constructor(){
-		this.uniqueId = -1
-		this.identifier = -1
-		this.x = 0.0
-		this.y = 0.0
-		this.rotation =0.0
-		this.intensity = 0.0
-		this.dead = false
-		this.smoothPosition  = createVector(0.0,0.0)
-		this.smoothRotation = 0.0
-		this.inRange = false
-		this.angle = 0
-		this.sizeL = 180
-		this.thisLabel = new Label()
-		this.oldPos = createVector(0,0)
-		
-	}
-	update(){
-		let currPos = createVector ( this.x,this.y )
-		let delta = currPos.dist(this.oldPos)
-		let alpha = 0.1
-		this.smoothRotation = this.easeFloat2((360 - this.rotation), this.smoothRotation, 0.85)
-		this.smoothPosition.x = this.easeFloat2(this.x, this.smoothPosition.x, alpha)
-   		this.smoothPosition.y = this.easeFloat2(this.y, this.smoothPosition.y, alpha)
-		this.angle = Math.atan2(this.smoothPosition.y - windowHeight/2, this.smoothPosition.x - windowWidth/2) * 180 / Math.PI
-		this.oldPos.x = this.smoothPosition.x
-		this.oldPos.y = this.smoothPosition.y
-	}
-	show(){
-		let radius = 45
-		let lSize = map(this.smoothRotation,0,360,10,75)
-		let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
-		let rotY = (0+ radius) * Math.sin(radians(this.smoothRotation))
-
-		fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
-		noStroke()
-		ellipse(this.smoothPosition.x,this.smoothPosition.y,radius*2 + lSize,radius*2 + lSize)
-		fill(255,255,100)
-		stroke(0)
-		strokeWeight(10)
-		circle(this.smoothPosition.x ,this.smoothPosition.y , radius*2)
-		stroke(0)
-		strokeWeight(10)
-		line(this.smoothPosition.x , this.smoothPosition.y  , this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
-
-		// DISPLAY DEGREES OF ROTATION
-		push()
-			translate(this.smoothPosition.x+rotX, this.smoothPosition.y+rotY)
-			rotate(radians(this.smoothRotation))
-			fill(255,255,100)
-			textSize(30)
-			// text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
-			text(Math.round(this.smoothRotation,3), 30,10)
-		pop()
-
-		// DISPLAY LABEL
-		this.thisLabel.update(this.smoothPosition.x,this.smoothPosition.y,this.sizeL, this.smoothRotation + 120)		
-		noStroke()
-	}
-	calculateRange(){
-		this.update()
-		
-		// CONDITION DEVICE OUT OF DRAWING RANGE
-		if(this.smoothPosition.x > windowWidth/2 || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight/2 || this.smoothPosition.y<0){
-			// uncomment this to draw a line between the center of the drawing area and the center of the tracked device
-			// strokeWeight(2)
-			// stroke(0,255,0)
-			// line(windowWidth/4,windowHeight/2, this.smoothPosition.x,this.smoothPosition.y)	
-			push()
-			translate(windowWidth/2,height/2)
-			rotate(radians(this.angle))
-			let sizeT = 30
-			let thisTriangle = new Triangle(windowWidth/2 - sizeT,-sizeT,sizeT)
-			thisTriangle.show()
-			pop()
-
-			this.inRange = false
-		}else{
-			this.inRange = true
-		}
-	}
-	easeFloat (target, value, alpha = 0.1) {
-    	const d = target - value
-    	return value + (d * alpha)
-  	}
-	easeFloat2 (target, value, alpha ){
-	value = value * alpha + target *(1-alpha)
-	return value
-	}
-  	easeFloatCircular (target, value, maxValue, alpha = 0.1) {
-    	let delta = target - value
-    	const altDelta = maxValue - Math.abs(delta)
-
-    	if (Math.abs(altDelta) < Math.abs(delta)) {
-      		delta = altDelta * (delta < 0 ? 1 : -1)
-    	}
-		return value + (delta * alpha)
-	}
-	radians (degrees) {
-		let radians = degrees * (Math.PI / 180)
-		return radians
-	}
-}
-
-// CLASS TO DRAW THE TRIANGLE
-class Triangle {
-    constructor(x, y, size) {
-        this.x = x
-        this.y = y
-        this.size = size
-    }
-
-    update() {
-
-    }
-
-    show() {
-        noStroke()
-        fill(255, 255, 100)
-        beginShape()
-        vertex(this.x, this.y)
-        vertex(this.x, this.y + this.size * 2)
-        vertex(this.x + this.size, this.y + this.size)
-        endShape(CLOSE)
-        textSize(16)
-        text('OBJECT OUT OF RANGE', this.x - 200, this.y + this.size + 4)
-    }
-}
-
-class Label {
-	constructor(x,y,size, rotation){
-		this.x =0
-		this.y = 0
-		this.size = 0
-		this.rotation = 0
-		this.count = 0
-		this.oldRotation = 0
-		this.oldY = 0
-		this.labelOff=false
-		this.opacity = 0
-	}
-	update(x,y,size,rotation){
-
-		this.x = x
-		this.y = y
-		this.size = size
-		this.rotation = Math.round(rotation)
-
-		if(this.rotation!=this.oldRotation){
-			this.count=30
-			this.labelOff = false
-
-		}else{
-			if(this.count>0){
-				this.count --
-			}else{
-				this.labelOff = true
-			}
-		}
-		this.opacity = map(this.count,0,30,0,255)
-		if(!this.labelOff){
-			this.show()
-		}
-		
-		this.oldRotation = this.rotation
-
-	}
-
-	show(){
-		// mapping the rotation of the tracked device to the position of the text array
-		// if rotation 120 
-		let txtContent =[
-			"I'M A PROTOTYPE FOR TANGIBLE INTERACTION AND DATA VISUALIZATION",
-			"MOVE ME AROUND TO EXPLORE MY AFFORDANCES!",
-			"STUDENTS FROM INTERACTION DESIGN USE ME TO EXPLORE THEIR CONCEPTS",
-			"DESIGN ... TECHNOLOGY ... THINKING ... CONCEIVING ...  DOING ...  ",
-			"PROTOTYPING"
-		]
-		let peak = 10
-		
-		
-		let offX=120
-		let offY=0
-		push()
-		strokeWeight(5)
-		stroke(255,255,100,this.opacity)
-		// fill(100,0,0,this.opacity)
-		noFill()
-		translate(this.x,this.y)
-		rotate(radians(this.rotation))
-		beginShape()
-		vertex(offX,offY)
-		vertex(offX+peak, offY-peak)
-		vertex(offX+peak,offY-this.size/3)
-		vertex(offX+peak+this.size, offY-this.size/3)
-		vertex(offX+peak+this.size,offY+this.size/3)
-		vertex(offX+peak, offY+this.size/3)
-		vertex(offX+peak,offY+peak)
-		endShape(CLOSE)
-		textSize(16)
-		fill(255,255,100,this.opacity)
-		textAlign(CENTER,CENTER)
-		text(txtContent[int(map(this.rotation,1,360,-1,4))],offX +30 , offY - this.size/4, this.size-25, this.size/2 )
-		pop()
-
-	}
-}
-
-
-
-
-

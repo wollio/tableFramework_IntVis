@@ -29,7 +29,7 @@ let pOIFlag = true
 let flatMapFlag = false
 let myFont
 let tableControl
-let bckColor = [0, 0, 0, 0]
+let bckColor = [10, 10, 10, 255]
 let seaColor = [100, 120, 255, 255];
 
 let zurich
@@ -97,7 +97,7 @@ function preload() {
     //earthImg = loadImage('../imgs/earth_3d_noclouds_min.jpg')
     //earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
     //earthImg = loadImage('../imgs/earth_1.png');
-    earthImg = loadImage('../imgs/earth_bw_noise.jpg');
+    earthImg = loadImage('../imgs/earth_bw_dark_gray_sea_2.jpg');
     //earthImg = loadImage('../imgs/world_map.svg');
     cloudImg = loadImage('../imgs/clouds_min.png');
     //sky = loadImage('../imgs/sky5.jpg')
@@ -281,7 +281,7 @@ function show3D() {
         ambientLight(60, 60, 60)
         let v1 = easycam.getPosition(500)
         pointLight(255, 255, 255, v1[0], v1[1] + 300, v1[2])
-        pointLight(255, 255, 255, v1[0], v1[1] + 300, v1[2])
+        pointLight(250, 250, 250, v1[0], v1[1] + 1000, v1[2])
         texture(earthImg)
         noStroke()
         // rotating earth in order to match coordinate system location
@@ -692,227 +692,13 @@ function loadData(path) {
     // multiplePOI();
 }
 
-//  ****** Classes ******
-class pointOfInterest {
-    constructor(x, y, z, place) {
-        this.position = createVector(x, y, z)
-        this.name = place
-    }
 
-    update() {
 
-    }
-}
 
-// *** CLASS FOR THE TRACKED DEVICE *** //
-class TrackedDevice{
-	constructor(){
-		this.uniqueId = -1
-		this.identifier = -1
-		this.x = 0.0
-		this.y = 0.0
-		this.rotation =0.0
-		this.intensity = 0.0
-		this.dead = false
-		this.smoothPosition  = createVector(0.0,0.0)
-		this.smoothRotation = 0.0
-		this.inRange = false
-		this.angle = 0
-		this.sizeL = 180
-		this.thisLabel = new Label()
-		this.oldPos = createVector(0,0)
-		
-	}
-	update(){
-		let currPos = createVector ( this.x,this.y )
-		let delta = currPos.dist(this.oldPos)
-		let alpha = 0.1
-		this.smoothRotation = this.easeFloat2((360 - this.rotation), this.smoothRotation, 0.85)
-		this.smoothPosition.x = this.easeFloat2(this.x, this.smoothPosition.x, alpha)
-   		this.smoothPosition.y = this.easeFloat2(this.y, this.smoothPosition.y, alpha)
-		this.angle = Math.atan2(this.smoothPosition.y - windowHeight/2, this.smoothPosition.x - windowWidth/2) * 180 / Math.PI
-		this.oldPos.x = this.smoothPosition.x
-		this.oldPos.y = this.smoothPosition.y
-	}
-	show(){
-		let radius = 45
-		let lSize = map(this.smoothRotation,0,360,10,75)
-		let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
-		let rotY = (0+ radius) * Math.sin(radians(this.smoothRotation))
 
-		fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
-		noStroke()
-		ellipse(this.smoothPosition.x,this.smoothPosition.y,radius*2 + lSize,radius*2 + lSize)
-		fill(255,255,100)
-		stroke(0)
-		strokeWeight(10)
-		circle(this.smoothPosition.x ,this.smoothPosition.y , radius*2)
-		stroke(0)
-		strokeWeight(10)
-		line(this.smoothPosition.x , this.smoothPosition.y  , this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
 
-		// DISPLAY DEGREES OF ROTATION
-		push()
-			translate(this.smoothPosition.x+rotX, this.smoothPosition.y+rotY)
-			rotate(radians(this.smoothRotation))
-			fill(255,255,100)
-			textSize(30)
-			// text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
-			text(Math.round(this.smoothRotation,3), 30,10)
-		pop()
 
-		// DISPLAY LABEL
-		this.thisLabel.update(this.smoothPosition.x,this.smoothPosition.y,this.sizeL, this.smoothRotation + 120)		
-		noStroke()
-	}
-	calculateRange(){
-		this.update()
-		
-		// CONDITION DEVICE OUT OF DRAWING RANGE
-		if(this.smoothPosition.x > windowWidth/2 || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight/2 || this.smoothPosition.y<0){
-			// uncomment this to draw a line between the center of the drawing area and the center of the tracked device
-			// strokeWeight(2)
-			// stroke(0,255,0)
-			// line(windowWidth/4,windowHeight/2, this.smoothPosition.x,this.smoothPosition.y)	
-			push()
-			translate(windowWidth/2,height/2)
-			rotate(radians(this.angle))
-			let sizeT = 30
-			let thisTriangle = new Triangle(windowWidth/2 - sizeT,-sizeT,sizeT)
-			thisTriangle.show()
-			pop()
 
-			this.inRange = false
-		}else{
-			this.inRange = true
-		}
-	}
-	easeFloat (target, value, alpha = 0.1) {
-    	const d = target - value
-    	return value + (d * alpha)
-  	}
-	easeFloat2 (target, value, alpha ){
-	value = value * alpha + target *(1-alpha)
-	return value
-	}
-  	easeFloatCircular (target, value, maxValue, alpha = 0.1) {
-    	let delta = target - value
-    	const altDelta = maxValue - Math.abs(delta)
-
-    	if (Math.abs(altDelta) < Math.abs(delta)) {
-      		delta = altDelta * (delta < 0 ? 1 : -1)
-    	}
-		return value + (delta * alpha)
-	}
-	radians (degrees) {
-		let radians = degrees * (Math.PI / 180)
-		return radians
-	}
-}
-
-// CLASS TO DRAW THE TRIANGLE
-class Triangle {
-    constructor(x, y, size) {
-        this.x = x
-        this.y = y
-        this.size = size
-    }
-
-    update() {
-
-    }
-
-    show() {
-        noStroke()
-        fill(255, 255, 100)
-        beginShape()
-        vertex(this.x, this.y)
-        vertex(this.x, this.y + this.size * 2)
-        vertex(this.x + this.size, this.y + this.size)
-        endShape(CLOSE)
-        textSize(16)
-        text('OBJECT OUT OF RANGE', this.x - 200, this.y + this.size + 4)
-    }
-}
-
-class Label {
-	constructor(x,y,size, rotation){
-		this.x =0
-		this.y = 0
-		this.size = 0
-		this.rotation = 0
-		this.count = 0
-		this.oldRotation = 0
-		this.oldY = 0
-		this.labelOff=false
-		this.opacity = 0
-	}
-	update(x,y,size,rotation){
-
-		this.x = x
-		this.y = y
-		this.size = size
-		this.rotation = Math.round(rotation)
-
-		if(this.rotation!=this.oldRotation){
-			this.count=30
-			this.labelOff = false
-
-		}else{
-			if(this.count>0){
-				this.count --
-			}else{
-				this.labelOff = true
-			}
-		}
-		this.opacity = map(this.count,0,30,0,255)
-		if(!this.labelOff){
-			this.show()
-		}
-		
-		this.oldRotation = this.rotation
-
-	}
-
-	show(){
-		// mapping the rotation of the tracked device to the position of the text array
-		// if rotation 120 
-		let txtContent =[
-			"I'M A PROTOTYPE FOR TANGIBLE INTERACTION AND DATA VISUALIZATION",
-			"MOVE ME AROUND TO EXPLORE MY AFFORDANCES!",
-			"STUDENTS FROM INTERACTION DESIGN USE ME TO EXPLORE THEIR CONCEPTS",
-			"DESIGN ... TECHNOLOGY ... THINKING ... CONCEIVING ...  DOING ...  ",
-			"PROTOTYPING"
-		]
-		let peak = 10
-		
-		
-		let offX=120
-		let offY=0
-		push()
-		strokeWeight(5)
-		stroke(255,255,100,this.opacity)
-		// fill(100,0,0,this.opacity)
-		noFill()
-		translate(this.x,this.y)
-		rotate(radians(this.rotation))
-		beginShape()
-		vertex(offX,offY)
-		vertex(offX+peak, offY-peak)
-		vertex(offX+peak,offY-this.size/3)
-		vertex(offX+peak+this.size, offY-this.size/3)
-		vertex(offX+peak+this.size,offY+this.size/3)
-		vertex(offX+peak, offY+this.size/3)
-		vertex(offX+peak,offY+peak)
-		endShape(CLOSE)
-		textSize(16)
-		fill(255,255,100,this.opacity)
-		textAlign(CENTER,CENTER)
-		text(txtContent[int(map(this.rotation,1,360,-1,4))],offX +30 , offY - this.size/4, this.size-25, this.size/2 )
-		pop()
-
-	}
-}
 
 
 

@@ -55,30 +55,7 @@ let elem = document.documentElement
 
 let co2Bubbles = [];
 
-function openFullscreen() {
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen()
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen()
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        elem.webkitRequestFullscreen()
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen()
-    }
-}
 
-/* Close fullscreen */
-function closeFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen()
-    } else if (document.mozCancelFullScreen) { /* Firefox */
-        document.mozCancelFullScreen()
-    } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-        document.webkitExitFullscreen()
-    } else if (document.msExitFullscreen) { /* IE/Edge */
-        document.msExitFullscreen()
-    }
-}
 
 
 function init() {
@@ -92,13 +69,6 @@ function resize() {
 
 
 function preload() {
-
-    //earthImg = loadImage('../imgs/earth_min_black_blue_sea.png');
-    //earthImg = loadImage('../imgs/earth_3d_noclouds_min.jpg')
-    //earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
-    //earthImg = loadImage('../imgs/earth_1.png');
-    //earthImg = loadImage('../imgs/earth_bw_dark_gray_sea_2.jpg');
-    //earthImg = loadImage('../imgs/world_map.svg');
     earthImg = loadImage('../imgs/earth_3d_noclouds_mono5-hires.jpg')
     cloudImg = loadImage('../imgs/clouds_min.png');
     //sky = loadImage('../imgs/sky5.jpg')

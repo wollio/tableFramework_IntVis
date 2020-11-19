@@ -30,6 +30,7 @@ let flatMapFlag = false
 let myFont
 let tableControl
 let bckColor = [0, 0, 0, 0]
+let seaColor = [100, 120, 255, 255];
 
 let zurich
 let cdmx
@@ -94,11 +95,12 @@ function preload() {
 
     //earthImg = loadImage('../imgs/earth_min_black_blue_sea.png');
     //earthImg = loadImage('../imgs/earth_3d_noclouds_min.jpg')
-    earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
-    //earthImg = loadImage('../imgs/earth_3d.jpg');
+    //earthImg = loadImage('../imgs/earth_min_black_trans_sea.png');
+    //earthImg = loadImage('../imgs/earth_1.png');
+    earthImg = loadImage('../imgs/earth_bw_noise.jpg');
     //earthImg = loadImage('../imgs/world_map.svg');
     cloudImg = loadImage('../imgs/clouds_min.png');
-    sky = loadImage('../imgs/sky2.png')
+    //sky = loadImage('../imgs/sky5.jpg')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
@@ -267,13 +269,13 @@ function show3D() {
 
         noLights()
         //ambientLight(255, 255, 255)
-        texture(sky)
+        //texture(sky)
         //noStroke()
-        //fill(30, 30, 30)
-        sphere(r * 5, 6, 6);
+        fill(255, 255, 255);
+        //sphere(r * 5, 6, 6);
 
-        fill(0, 0, 200);
-        sphere(r - 5, 20, 20);
+        //fill(seaColor);
+        //sphere(r - 5, 20, 20);
 
         ambientLight(60, 60, 60)
         let v1 = easycam.getPosition(500)

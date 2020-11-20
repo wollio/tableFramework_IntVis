@@ -102,7 +102,6 @@ function resize(){
 	init()
 }
 
-
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight, WEBGL)
     noStroke()
@@ -110,13 +109,10 @@ function setup() {
 
     colorBlue = color(0, 0, 255);
 
-    gl = this._renderer.GL;
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     //gl.colorMask(true, true, true, false);
 
     // resizing / downscaling the resolution of the image-data
-    co2.resize(windowWidth/8, windowHeight/8)
+    co2.resize(windowWidth / 7, windowHeight / 7)
     refrst.resize(windowWidth/8, windowHeight/8)
 
     if (!easycamIntialized) {
@@ -153,58 +149,27 @@ function setup() {
         // geo coordinates
         // replace the random locations with the projects
         if (i > 0) {
-            let lat = radians(curr_lat[i])
-            let lon = radians(curr_lon[i])
-
-            // console.log(i , cities[i], lat , lon )
-            // cartesian coordinates
-            let x = r * Math.cos(lat) * Math.cos(lon)
-            let y = r * Math.cos(lat) * Math.sin(lon)
-            let z = r * Math.sin(lat)
-            pOI.push(createVector(x,y,z))
-            let x2 = (r+25) * Math.cos(lat) * Math.cos(lon)
-            let y2 = (r+25) * Math.cos(lat) * Math.sin(lon)
-            let z2 = (r+25) * Math.sin(lat)
-            // 25 is the distance or length of the spikes
-            pOI2.push(createVector(x2,y2,z2))
-
+            pOI.push(toCartesian(curr_lat[i], curr_lon[i], r));
+            pOI2.push(toCartesian(curr_lat[i], curr_lon[i], r + 25));
         }
     }
     tPS = createVector()
     tPE = createVector()
 
     // SETTING RANDOM LOCATION FOR INTERACTIVE 3D POINT(S) EXAMPLE
-    let lat = radians(47.3769)
-    let lon = radians(8.5417)
+    let lat = 47.3769;
+    let lon = 8.5417;
 
+    let latZ = 47.3769;
+    let lonZ = 8.5417;
 
-    let latZ = radians(47.3769)
-    let lonZ = radians(8.5417)
+    let latMX = 19.4969
+    let lonMX = -99.7233
 
-    let latMX = radians(19.4969)
-    let lonMX = radians(-99.7233)
-
-
-    zurich = createVector(0, 0, 0)
-    zurich.x = r * Math.cos(latZ) * Math.cos(lonZ)
-    zurich.y = r * Math.cos(latZ) * Math.sin(lonZ)
-    zurich.z = r * Math.sin(latZ)
-
-    cdmx = createVector(0, 0, 0)
-    cdmx.x = r * Math.cos(latMX) * Math.cos(lonMX)
-    cdmx.y = r * Math.cos(latMX) * Math.sin(lonMX)
-    cdmx.z = r * Math.sin(latMX)
-
-    tPS.x = r * Math.cos(lat) * Math.cos(lon)
-    tPS.y = r * Math.cos(lat) * Math.sin(lon)
-    tPS.z = r * Math.sin(lat)
-
-    tPE.x = (r + 50) * Math.cos(lat) * Math.cos(lon)
-    tPE.y = (r + 50) * Math.cos(lat) * Math.sin(lon)
-    tPE.z = (r + 50) * Math.sin(lat)
-
-    tPS = calcTo3DVector(0, 0, r);
-    tPE = calcTo3DVector(0, 0, r + 500)
+    zurich = toCartesian(lat, lon, r);
+    cdmx = toCartesian(latMX, lonMX, r);
+    tPS = toCartesian(lat, lon, r);
+    tPE = toCartesian(lat, lon, r + 50);
 
     //let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
     listenMessages()
@@ -237,7 +202,7 @@ function draw() {
 
     for (let i = 0; i < 400; i++) {
         // rename to : pOIx, pOIy, pOIz
-        drawLine(-pOI[i].x,pOI[i].y,pOI[i].z,-pOI2[i].x,pOI2[i].y,pOI2[i].z,colorBlue)
+        drawLineFromVector(pOI[i], pOI2[i], colorBlue);
     }
 
     // here we call the function visualize and pass the desired arraylist
@@ -251,16 +216,16 @@ function draw() {
   }
 }
 
-function showFlatPointsOfInterest() {
+/*function showFlatPointsOfInterest() {
     for (let i = 0; i < cities.length; i++) {
         let lR = 400
         let lLat = asin(pOI[i].z / lR)
         let lLong = atan2(pOI[i].y, -pOI[i].x)
         lLat = lLat * 90 / PI * 10 // scaling
         lLong = lLong * 180 / PI * 10 // scaling
-        drawLine(lLong, lLat, 0, lLong, lLat, 50, colorBlue)
+        //drawLine(lLong, lLat, 0, lLong, lLat, 50, colorBlue)
     }
-}
+}*/
 
 // function touchMoved() {
 //   return false;
@@ -312,18 +277,18 @@ function show2d() {
 	fill(255,0,0)
 	noStroke()
 	if(user.dist(testPoint)<55){
-		circle(testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 10)
+		circle(-testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 10)
 	}else{	
-		circle(testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 1)
+		circle(-testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 1)
 	}
 	if(user.dist(testPoint2)<55){
-		circle(testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 10)
+		circle(-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 10)
 	}else{	
-		circle(testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 1)
+		circle(-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 1)
 	}
 	stroke(255,0,0)
 	strokeWeight(0.5)
-	line(testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
+	line(-testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
 
     if(trackedDevices.length>0){
 
@@ -487,10 +452,10 @@ function showPointsOfInterest(amount) {
     if (pOIFlag) {
         let testPoints = []
         // the screenPoisition() function projects coordinates from 3D space into the 2D projections of the Screen
-        let tZurich = screenPosition(-zurich.x, zurich.y, zurich.z)
-        let tCDMX = screenPosition(-cdmx.x, cdmx.y, cdmx.z)
+        let tZurich = screenPosition(zurich.x, zurich.y, zurich.z)
+        let tCDMX = screenPosition(cdmx.x, cdmx.y, cdmx.z)
         for (let i = 0; i < amount; i++) {
-            testPoints[i] = screenPosition(-pOI[i].x, pOI[i].y, pOI[i].z)
+            testPoints[i] = screenPosition(pOI[i].x, pOI[i].y, pOI[i].z)
         }
         let user = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2)
         // in case the touch display or device is available use the touchX instead
@@ -505,7 +470,7 @@ function showPointsOfInterest(amount) {
                 noStroke()
                 circle(testPoints[i].x + windowWidth / 2, testPoints[i].y + windowHeight / 2, 15)
                 let lat = Math.asin(pOI[i].z / r)
-                let lon = Math.atan2(pOI[i].y, pOI[i].x)
+                let lon = Math.atan2(pOI[i].y, -pOI[i].x)
                 lat = lat * 180 / Math.PI
                 lon = lon * 180 / Math.PI
                 textSize(12)
@@ -545,6 +510,20 @@ function drawCylinder(x, y, z, size) {
     push();
     translate(x, y, z);
     cylinder(5, size);
+    pop();
+}
+
+function drawLineFromVector(startPoint, endPoint, c, sw = 2.5) {
+    push();
+    fill(c)
+    stroke(c)
+    strokeWeight(sw)
+    beginShape()
+    vertex(startPoint.x, startPoint.y, startPoint.z);
+    vertex(endPoint.x, endPoint.y, endPoint.z);
+    endShape()
+    noStroke()
+    noFill();
     pop();
 }
 

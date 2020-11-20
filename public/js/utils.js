@@ -15,11 +15,11 @@ function calcTo3DVector(lat, lon, radius) {
     return createVector(x, y, z);
 }
 
-function calcTo3DVector2(lat, lon, radius) {
+function toCartesian(lat, lon, radius) {
     let x = radius * Math.cos(radians(lat)) * Math.cos(radians(lon))
     let y = radius * Math.cos(radians(lat)) * Math.sin(radians(lon))
     let z = radius * Math.sin(radians(lat))
-    return createVector(x,y,z);
+    return createVector(-x,y,z);
 }
 
 function horizontalToCartesian (lat, lon, radius) {

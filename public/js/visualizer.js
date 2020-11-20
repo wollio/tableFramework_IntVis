@@ -23,41 +23,16 @@ function rotateToDirection(point) {
 function drawCylinder(startPoint, endPoint, c) {
     push();
     fill(c);
-    //let mp = getMidPoint(startPoint, endPoint)
-
-    /*push();
-    fill(0);
-    translate(startPoint);
-    sphere(15, 3, 3);
-    pop();
-
-    push();
-    fill(0);
-    translate(endPoint);
-    sphere(15, 3, 3);
-    pop();*/
-
-    let angle = acos( startPoint.dot(endPoint) );
-    let axis = startPoint.cross(endPoint);
 
     let v1 = copyVector(startPoint).sub(copyVector(endPoint));
-    //let dist = fastDistVector(startPoint, endPoint);
     let dist = startPoint.dist(endPoint);
-
-    //translate(startPoint);
-    //drawCoordinates();
-    //rotateToDirection(endPoint);
-
-    /*rotateX(cos(angle));
-    rotateY(sin(angle));
-    rotateZ(1 - c);*/
 
     let rho = sqrt(pow(v1.x, 2)+pow(v1.y, 2)+pow(v1.z, 2));
     let phi = acos(v1.z/rho);
     let the = atan2(v1.y, v1.x);
-    v1.mult(-1);
-    let v2 = copyVector(startPoint);
 
+    v1.mult(-0.5);
+    let v2 = copyVector(startPoint);
 
     translate(v2.x, v2.y, v2.z);
     translate(v1.x, v1.y, v1.z);
@@ -65,12 +40,7 @@ function drawCylinder(startPoint, endPoint, c) {
     rotateY(phi);
     rotateX(PI / 2.0);
 
-    //translate(mp.x + PI / 2, 0, mp.z + PI / 2);
-    /*rotateX(atan(v1.y / v1.z));
-    rotateY(atan(v1.x / v1.z));
-    rotateZ(atan(v1.y / v1.x));*/
-
-    cylinder(5, 40, 7, 1);
+    cylinder(5, dist, 7, 1);
     pop();
 }
 

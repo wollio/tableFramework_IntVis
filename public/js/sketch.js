@@ -60,7 +60,7 @@ let colorBlue
 let pntsFromTIFF_co2  = []
 let pntsFromTIFF_refrst = []
 
-let flagCO2Data = true
+let flagCO2Data = false
 let flagRfrsData = false
 
 let flagDataVisStyleCO2 = true
@@ -203,6 +203,7 @@ function draw() {
     for (let i = 0; i < 400; i++) {
         // rename to : pOIx, pOIy, pOIz
         drawLineFromVector(pOI[i], pOI2[i], colorBlue);
+        drawCylinder(pOI[i], pOI2[i], color(0, 255, 0));
     }
 
     // here we call the function visualize and pass the desired arraylist
@@ -442,9 +443,7 @@ function showFlatMap(mapPoints, farbe) {
 }
 
 function fastDist(ax, ay, az, bx, by, bz) {
-    let fdist = (bx - ax) * (bx - ax) + (by - ay) * (by - ay) + (bz - az) * (bz - az)
-    // fdist = fdist
-    return fdist
+    return (bx - ax) * (bx - ax) + (by - ay) * (by - ay) + (bz - az) * (bz - az);
 }
 
 // rename this function - show Points Of Interest
@@ -504,13 +503,6 @@ function showPointsOfInterest(amount) {
         // popMatrix()
         easycam.endHUD()
     }
-}
-
-function drawCylinder(x, y, z, size) {
-    push();
-    translate(x, y, z);
-    cylinder(5, size);
-    pop();
 }
 
 function drawLineFromVector(startPoint, endPoint, c, sw = 2.5) {

@@ -82,11 +82,12 @@ function listenMessages(){
         thisDevice.x = data.x * windowWidth
         thisDevice.y = data.y * windowHeight
         thisDevice.rotation = data.rot
-        testTrackDevices.push(thisDevice)
+        trackedDevices.push(thisDevice)
+        createHTML(data.id)
     })
     socket.on('updateDevice', function(data){
         let id = data.id
-        testTrackDevices.forEach( element => {
+        trackedDevices.forEach( element => {
             if(element.uniqueId === id){
                 element.x = data.x * windowWidth
                 element.y = data.y * windowHeight
@@ -96,10 +97,11 @@ function listenMessages(){
     })
     socket.on('removeDevice', function(data){
         let id = data.id
-        testTrackDevices.forEach( function(element,index) {
+        trackedDevices.forEach( function(element,index) {
             if(element.uniqueId == id ){
-                testTrackDevices.splice(index,1)
+                trackedDevices.splice(index,1)
             }
         })
+        destroyHTML(data.id)
     })
 }

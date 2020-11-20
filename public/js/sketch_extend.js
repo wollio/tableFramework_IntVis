@@ -59,20 +59,28 @@ class DataPointGeoTIFF {
         tZ 
       )
 
+      this.pointWeight = map(this.value,0,255,1.2,8) *map(this.value,0,255,1.2,8) * this.scale;
+
+      tX = this.radius * Math.cos(radians(this.lat) ) * Math.cos(radians(this.lon))
+      tY = this.radius * Math.cos(radians(this.lat)) * Math.sin(radians(this.lon))
+      tZ = this.radius * Math.sin(radians(this.lat))
+
+      this.loc3Dend = createVector(
+          tX,
+          tY,
+          tZ
+      )
+
   }
   // first parameter is a boolean for the visualization style and second one is the display color
   display(visStyle,c){
 
-    let pointWeight = map(this.value,0,255,1.2,8) *map(this.value,0,255,1.2,8) * this.scale
+
     if(this.value>0){
 
       if(visStyle){
-        strokeWeight(2)
-        stroke(c)
         push()
-        translate(-this.loc3D.x,this.loc3D.y,this.loc3D.z)
-        noFill()
-        circle(0,0,pointWeight)
+        drawLine(this.loc3D.x, this.loc3D.y, this.loc3D.z, this.loc3Dend.x, this.loc3Dend.y, this.loc3Dend.z, c);
         pop()
       }else{
 

@@ -15,8 +15,8 @@ class TrackedDevice{
         this.sizeL = 180
         this.thisLabel = new Label()
         this.oldPos = createVector(0,0)
-
     }
+
     update(){
         let currPos = createVector ( this.x,this.y )
         let delta = currPos.dist(this.oldPos)
@@ -28,11 +28,12 @@ class TrackedDevice{
         this.oldPos.x = this.smoothPosition.x
         this.oldPos.y = this.smoothPosition.y
     }
+
     show(){
         let radius = 45
         let lSize = map(this.smoothRotation,0,360,10,75)
-        let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
-        let rotY = (0+ radius) * Math.sin(radians(this.smoothRotation))
+        let rotX = (radius) * Math.cos(radians(this.smoothRotation))
+        let rotY = (radius) * Math.sin(radians(this.smoothRotation))
 
         fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
         noStroke()

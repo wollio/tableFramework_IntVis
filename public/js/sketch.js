@@ -8,9 +8,7 @@
 // https://github.com/processing/p5.js/issues/1553 -> solving the 2d Projection of 3d points
 // https://www.keene.edu/campus/maps/tool/ -> drawing earth maps and converting them into latitude longitude
 
-let earthImg
-let sky
-let cloudImg;
+let earthImg, sky, cloudImg;
 
 let theta = 0.001
 let r = 400
@@ -50,10 +48,11 @@ let futureCitiesTable
 let futureCitiesData
 let cities
 
-
 // setting variables for loading geoTIFF data
 let co2
 let refrst
+
+let colorBlue
 
 // these variables are the array lists of objects containing data points extracted form the
 // simplified geoTIFF image(s)
@@ -62,9 +61,9 @@ let pntsFromTIFF_co2  = []
 let pntsFromTIFF_refrst = []
 
 let flagCO2Data = true
-let flagRfrsData = true
+let flagRfrsData = false
 
-let flagDataVisStyleCO2 = false
+let flagDataVisStyleCO2 = true
 let flagDataVisStyleRfrst = true
 
 /*  full screen */
@@ -74,11 +73,9 @@ function init() {
 
 }
 
-
 function resize() {
     init();
 }
-
 
 function preload() {
     earthImg = loadImage('../imgs/earth_3d_noclouds_mono5-hires.jpg')
@@ -88,19 +85,14 @@ function preload() {
     loadData('assets/data/future_cities.csv')
 
     co2 = loadImage('assets/data/co2_emissions.png')
-	  refrst = loadImage('assets/data/geodata_ref_potential.png')
+    refrst = loadImage('assets/data/geodata_ref_potential.png')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
 
     socket.on('connected', function (data) {
-        // console.log('new client connected id:' + data.id)
+        console.log('new client connected id:' + data.id)
     })
 
     myFont = loadFont('assets/Futura-Lig.otf')
-
-    let g = new GeoTiffany();
-    g.load('../data/odiac2019_jan.tif').then((res) => {
-        co2Bubbles = loadLocationsOn3D(res.data, res.width, res.height);
-    });
 
     openFullscreen()
     init()
@@ -115,6 +107,8 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight, WEBGL)
     noStroke()
     textFont(myFont)
+
+    colorBlue = color(0, 0, 255);
 
     gl = this._renderer.GL;
     gl.enable(gl.BLEND);
@@ -142,8 +136,6 @@ function setup() {
     let far = 80000
 
     addScreenPositionFunction(this)
-    //setMap(earthMap, pointsEarth, screenPointsEarth)
-    // console.log(this._renderer)
 
     // CREATING A RANDOM ARRAY OF POINTS AROUND THE GLOBE
     //  replace with csv real points or Points of Interest
@@ -156,11 +148,7 @@ function setup() {
     let fut_lon = futureCitiesData.getColumn(30)
 
     console.log(cities.length + " total rows in table")
-    // for(let i = 0 ; i < cities.length; i ++ ){
-    // 	if(i>0){
-    // 		// console.log(cities[i] , curr_lat[i], curr_lon[i])
-    // 	}
-    // }
+
     for (let i = 0; i < cities.length; i++) {
         // geo coordinates
         // replace the random locations with the projects
@@ -180,8 +168,6 @@ function setup() {
             // 25 is the distance or length of the spikes
             pOI2.push(createVector(x2,y2,z2))
 
-            //pOI.push(spike(lat, lon, 25, r).start);
-            //pOI2.push(spike(lat, lon, 25, r).end);
         }
     }
     tPS = createVector()
@@ -197,12 +183,6 @@ function setup() {
 
     let latMX = radians(19.4969)
     let lonMX = radians(-99.7233)
-
-    // from geographic coordinate system to cartesian system
-    // R is radius, lat = latitude , lon = longitude
-    // x = R * cos(lat) * cos(lon)
-    // y = R * cos(lat) * sin(lon)
-    // z = R *sin(lat)
 
 
     zurich = createVector(0, 0, 0)
@@ -223,7 +203,10 @@ function setup() {
     tPE.y = (r + 50) * Math.cos(lat) * Math.sin(lon)
     tPE.z = (r + 50) * Math.sin(lat)
 
-    let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
+    tPS = calcTo3DVector(0, 0, r);
+    tPE = calcTo3DVector(0, 0, r + 500)
+
+    //let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
     listenMessages()
 
     // here we are calling the function dataFromTIFFtoArray
@@ -252,6 +235,11 @@ function draw() {
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
 
+    for (let i = 0; i < 400; i++) {
+        // rename to : pOIx, pOIy, pOIz
+        drawLine(-pOI[i].x,pOI[i].y,pOI[i].z,-pOI2[i].x,pOI2[i].y,pOI2[i].z,colorBlue)
+    }
+
     // here we call the function visualize and pass the desired arraylist
  	// which will iterate through each data point and visualize it
  	// the flag is a boolean to display or hide the visualization
@@ -270,7 +258,7 @@ function showFlatPointsOfInterest() {
         let lLong = atan2(pOI[i].y, -pOI[i].x)
         lLat = lLat * 90 / PI * 10 // scaling
         lLong = lLong * 180 / PI * 10 // scaling
-        drawLine(lLong, lLat, 0, lLong, lLat, 50, 0, 255, 0)
+        drawLine(lLong, lLat, 0, lLong, lLat, 50, colorBlue)
     }
 }
 
@@ -280,17 +268,6 @@ function showFlatPointsOfInterest() {
 
 function show3D() {
     if (threeDviewFlag) {
-
-        noLights()
-        //ambientLight(255, 255, 255)
-        //texture(sky)
-        //noStroke()
-        fill(255, 255, 255);
-        //sphere(r * 5, 6, 6);
-
-        //fill(seaColor);
-        //sphere(r - 5, 20, 20);
-
         ambientLight(60, 60, 60)
         let v1 = easycam.getPosition(500)
         pointLight(255, 255, 255, v1[0], v1[1] + 300, v1[2])
@@ -347,7 +324,8 @@ function show2d() {
 	stroke(255,0,0)
 	strokeWeight(0.5)
 	line(testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
-	if(trackedDevices.length>0){
+
+    if(trackedDevices.length>0){
 
 		trackedDevices.forEach( element => {
 			element.calculateRange()
@@ -366,7 +344,7 @@ function show2d() {
 				// access the uniqueId : element.uniqueId // stays the same always for each tracked object
 				text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
 			}
-			updateHTML(element.smoothPosition.x, element.smoothPosition.x,element.uniqueId)
+			updateHTML(element.smoothPosition.x, element.smoothPosition.x, element.uniqueId)
 		})
 	}
 	easycam.endHUD()
@@ -392,7 +370,6 @@ function updateHTML(x_pos, y_pos,tracked_id){
 }
 // this function destroys the html elements which are not used anymore, to avoid accumulating appended children
 function destroyHTML(tracked_id){
-
 	// should remove the HTML elements from past tracked devices that are not in use any more
 	let trackedDivs = document.getElementsByClassName("trackedDivs")
 	Array.prototype.forEach.call(trackedDivs, function(element) {
@@ -401,26 +378,6 @@ function destroyHTML(tracked_id){
 			element.remove()
 		}
 	})
-}
-
-
-function setMap(map, mapPoints, screenMapPoints) {
-
-        // drawing the spikes from the Points Of Interest
-        for (let i = 0; i < 400; i++) {
-
-            // rename to : pOIx, pOIy, pOIz
-            drawLine(-pOI[i].x,pOI[i].y,pOI[i].z,-pOI2[i].x,pOI2[i].y,pOI2[i].z,0,0,255)
-        }
-
-        for (let i = 0; i < co2Bubbles.length; i++) {
-            let vector = horizontalToCartesian(co2Bubbles[i].lat, co2Bubbles[i].lon, r + 20);
-            //drawSphere(vector.x, vector.y, vector.z, co2Bubbles[i].size);
-        }
-
-        drawLine(-tPS.x, tPS.y, tPS.z, -tPE.x, tPE.y, tPE.z, 0, 255, 0)
-
-        // showFlatPointsOfInterest();
 }
 
 function windowResized() {
@@ -504,18 +461,18 @@ function showFlatMap(mapPoints, farbe) {
             if (i > 0) {
                 let delta = fastDist(lLong, lLat, 0, lastLong, lastLat, 0)
                 if (delta < (4000)) {
-                    drawLine(lLong, lLat, 0, lastLong, lastLat, 0, 255, 255, 255)
+                    drawLine(lLong, lLat, 0, lastLong, lastLat, 0, colorBlue)
                 }
             }
             lastLat = lLat
             lastLong = lLong
 
         }
-        drawLine((180 * scaleX), -400, 0, -(180 * scaleX), 400, 0, 255, 0, 0)
+        drawLine((180 * scaleX), -400, 0, -(180 * scaleX), 400, 0, colorBlue)
         // meridian or longitude 0
-        drawLine(-110, -400, 0, -110, 400, 0, 255, 0, 100)
+        drawLine(-110, -400, 0, -110, 400, 0, colorBlue)
         // equator or latitude 0
-        drawLine(-(180 * scaleX), 0, 0, (180 * scaleX), 0, 0, 255, 100, 0)
+        drawLine(-(180 * scaleX), 0, 0, (180 * scaleX), 0, 0, colorBlue)
     }
 }
 
@@ -591,10 +548,10 @@ function drawCylinder(x, y, z, size) {
     pop();
 }
 
-function drawLine(x1, y1, z1, x2, y2, z2, r, g, b) {
-    fill(r, g, b)
-    stroke(r, g, b)
-    strokeWeight(0.5)
+function drawLine(x1, y1, z1, x2, y2, z2, c) {
+    fill(c)
+    stroke(c)
+    strokeWeight(2.5)
     beginShape()
     vertex(x1, y1, z1)
     vertex(x2, y2, z2)

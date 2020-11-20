@@ -7,19 +7,6 @@ rotate(heading.heading() + PI/2.0);
 cylinder(20, heading.mag());
 pop();
 
-function getMidPoint(startPoint, endPoint) {
-    return p5.Vector.lerp(startPoint, endPoint, 0.5);
-}
-
-function rotateToDirection(point) {
-    let upVec = createVector(0, 1, 0);
-    let axisOfRotation = point.cross( upVec );
-
-    let angleOfRotation = upVec.angleBetween( axisOfRotation );
-    axisOfRotation.normalize();
-    rotate( -angleOfRotation, axisOfRotation );
-}
-
 function drawCylinder(startPoint, endPoint, c) {
     push();
     fill(c);
@@ -41,11 +28,8 @@ function drawCylinder(startPoint, endPoint, c) {
     rotateX(PI / 2.0);
 
     cylinder(5, dist, 7, 1);
+    //cone(4, 70);
     pop();
-}
-
-function fastDistVector(vec1, vec2) {
-    return fastDist(vec1.x, vec1.y, vec1.z, vec2.x, vec2.y, vec2.z);
 }
 
 function copyVector(vec) {

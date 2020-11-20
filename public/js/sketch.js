@@ -8,7 +8,12 @@
 // https://github.com/processing/p5.js/issues/1553 -> solving the 2d Projection of 3d points
 // https://www.keene.edu/campus/maps/tool/ -> drawing earth maps and converting them into latitude longitude
 
+let cache = {
+
+};
+
 let earthImg, sky, cloudImg;
+let cloudEnabled = false;
 
 let theta = 0.001
 let r = 400
@@ -109,8 +114,6 @@ function setup() {
 
     colorBlue = color(0, 0, 255);
 
-    //gl.colorMask(true, true, true, false);
-
     // resizing / downscaling the resolution of the image-data
     co2.resize(windowWidth / 7, windowHeight / 7)
     refrst.resize(windowWidth/8, windowHeight/8)
@@ -192,6 +195,9 @@ function setup() {
 
 function draw() {
     background(bckColor)
+
+    document.getElementById("frameRateDisplay").innerText = frameRate();
+
     let user = createVector(mouseX, mouseY)
     show3D()
     show2d()
@@ -200,17 +206,19 @@ function draw() {
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
 
+    let start = millis();
     for (let i = 0; i < 400; i++) {
         // rename to : pOIx, pOIy, pOIz
-        drawLineFromVector(pOI[i], pOI2[i], colorBlue);
+        //drawLineFromVector(pOI[i], pOI2[i], colorBlue);
         drawCylinder(pOI[i], pOI2[i], color(0, 255, 0));
     }
+    console.log(millis() - start);
 
     // here we call the function visualize and pass the desired arraylist
  	// which will iterate through each data point and visualize it
  	// the flag is a boolean to display or hide the visualization
  	if(flagCO2Data){
-    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
+    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0, 100))
   }
   if(flagRfrsData){
     visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
@@ -250,12 +258,13 @@ function show3D() {
         sphere(r, 20, 20)
         pop()
 
-        push();
-        rotateX(millis() * 0.00002);
-        texture(cloudImg);
-        sphere(r + 5, 20, 20);
-        pop();
-
+        if (cloudEnabled) {
+            push();
+            rotateX(millis() * 0.00002);
+            texture(cloudImg);
+            sphere(r + 5, 20, 20);
+            pop();
+        }
     }
 }
 
@@ -503,38 +512,6 @@ function showPointsOfInterest(amount) {
         // popMatrix()
         easycam.endHUD()
     }
-}
-
-function drawLineFromVector(startPoint, endPoint, c, sw = 2.5) {
-    push();
-    fill(c)
-    stroke(c)
-    strokeWeight(sw)
-    beginShape()
-    vertex(startPoint.x, startPoint.y, startPoint.z);
-    vertex(endPoint.x, endPoint.y, endPoint.z);
-    endShape()
-    noStroke()
-    noFill();
-    pop();
-}
-
-function drawLine(x1, y1, z1, x2, y2, z2, c) {
-    fill(c)
-    stroke(c)
-    strokeWeight(2.5)
-    beginShape()
-    vertex(x1, y1, z1)
-    vertex(x2, y2, z2)
-    endShape()
-    noStroke()
-}
-
-function drawSphere(x, y, z, size) {
-    push();
-    translate(x, y, z);
-    sphere(size, 3, 3);
-    pop();
 }
 
 function loadData(path) {

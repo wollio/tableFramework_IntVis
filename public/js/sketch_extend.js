@@ -33,9 +33,11 @@ function dataFromTIFFtoArray(_img,  _pntsFromTIFF, _scale) {
 // function iterates through the objects inside the corresponding array 
 // and calls the function display(...) from each object
 function visualizeDataFromTIFF(_pntsFromTIFF, _visFlag, _c){
-  _pntsFromTIFF.forEach(element => {
-      element.display(_visFlag,_c)
-  })
+    let start = millis();
+      _pntsFromTIFF.forEach(element => {
+          element.display(_visFlag,_c)
+      })
+    console.log("tiffvis: " + (millis() - start));
 }
 // a class to store each Pixel as data point
 class DataPointGeoTIFF {
@@ -61,7 +63,8 @@ class DataPointGeoTIFF {
   display(visStyle,c){
     if(this.value>0){
       if(visStyle){
-          drawLineFromVector(this.loc3D, this.loc3Dend, c, 1);
+          //drawLineFromVector(this.loc3D, this.loc3Dend, c, 1);
+          drawCylinder(this.loc3D, this.loc3Dend, c, map(this.value, 0, 255, 1, 3));
           //drawLine(this.loc3D.x, this.loc3D.y, this.loc3D.z, this.loc3Dend.x, this.loc3Dend.y, this.loc3Dend.z, c);
       }else{
         strokeWeight(pointWeight)

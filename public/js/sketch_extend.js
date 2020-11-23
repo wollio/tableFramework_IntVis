@@ -4,7 +4,7 @@
 
 function dataFromTIFFtoArray(_img,  _pntsFromTIFF, _scale) {
   _img.loadPixels()
-  let step = 1;
+  let step = 2;
   console.log(_img.width , _img.height)
   for(let x = 0; x < _img.width; x+=step) {
     for(let y = 0; y < _img.height; y+=step) {
@@ -33,11 +33,9 @@ function dataFromTIFFtoArray(_img,  _pntsFromTIFF, _scale) {
 // function iterates through the objects inside the corresponding array 
 // and calls the function display(...) from each object
 function visualizeDataFromTIFF(_pntsFromTIFF, _visFlag, _c){
-    let start = millis();
-      _pntsFromTIFF.forEach(element => {
-          element.display(_visFlag,_c)
-      })
-    console.log("tiffvis: " + (millis() - start));
+  _pntsFromTIFF.forEach(element => {
+      element.display(_visFlag,_c)
+  })
 }
 // a class to store each Pixel as data point
 class DataPointGeoTIFF {
@@ -54,7 +52,7 @@ class DataPointGeoTIFF {
       this.radius = 400 + 5
 
       //this.pointWeight = map(this.value,0,255,1.2,8) *map(this.value,0,255,1.2,8) * this.scale;
-      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5;
+      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5 * cummulativePercentage / 100;
 
       this.loc3D = toCartesian(this.lat, this.lon, this.radius);
       this.loc3Dend = toCartesian(this.lat, this.lon, this.radius + this.pointWeight);

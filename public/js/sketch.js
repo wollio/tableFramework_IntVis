@@ -130,6 +130,8 @@ function setup() {
     document.getElementById('defaultCanvas0').addEventListener('touchend', handleEnd, false)
     document.getElementById('defaultCanvas0').addEventListener('touchmove', handleMove, false)
 
+    updateCummulativePercentage();
+
     let fov = PI / 3
     let near = 200
     let far = 80000
@@ -202,27 +204,32 @@ function draw() {
     show3D()
     show2d()
     showPointsOfInterest(cities.length - 2)
+    showCityCylinders();
     showFlatMap(pointsEarth, color(0, 255, 0))
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
-
-    let start = millis();
-    for (let i = 0; i < 400; i++) {
-        // rename to : pOIx, pOIy, pOIz
-        //drawLineFromVector(pOI[i], pOI2[i], colorBlue);
-        drawCylinder(pOI[i], pOI2[i], color(0, 255, 0));
-    }
-    console.log(millis() - start);
-
     // here we call the function visualize and pass the desired arraylist
  	// which will iterate through each data point and visualize it
  	// the flag is a boolean to display or hide the visualization
  	if(flagCO2Data){
-    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0, 100))
+    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
   }
   if(flagRfrsData){
     visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
   }
+}
+
+/**
+ * Displays cylinder for each pointOfInterest
+ */
+function showCityCylinders() {
+    if (pOIFlag) {
+        for (let i = 0; i < cities.length - 1; i++) {
+            // rename to : pOIx, pOIy, pOIz
+            //drawLineFromVector(pOI[i], pOI2[i], colorBlue);
+            drawCylinder(pOI[i], pOI2[i], color(0, 255, 0));
+        }
+    }
 }
 
 /*function showFlatPointsOfInterest() {

@@ -52,17 +52,24 @@ class DataPointGeoTIFF {
       this.radius = 400 + 5
 
       //this.pointWeight = map(this.value,0,255,1.2,8) *map(this.value,0,255,1.2,8) * this.scale;
-      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5 * cummulativePercentage / 100;
+
 
       this.loc3D = toCartesian(this.lat, this.lon, this.radius);
+      this.updateValue();
+  }
+
+  updateValue() {
+      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5 * cummulativePercentage / 100;
       this.loc3Dend = toCartesian(this.lat, this.lon, this.radius + this.pointWeight);
   }
+
   // first parameter is a boolean for the visualization style and second one is the display color
   display(visStyle,c){
     if(this.value>0){
+        this.updateValue();
       if(visStyle){
           //drawLineFromVector(this.loc3D, this.loc3Dend, c, 1);
-          drawCylinder(this.loc3D, this.loc3Dend, c, map(this.value, 0, 255, 1, 3));
+          drawCylinder(this.loc3D, this.loc3Dend, c, map(this.value, 0, 255, 2, 5));
           //drawLine(this.loc3D.x, this.loc3D.y, this.loc3D.z, this.loc3Dend.x, this.loc3Dend.y, this.loc3Dend.z, c);
       }else{
         strokeWeight(pointWeight)

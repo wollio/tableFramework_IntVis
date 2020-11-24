@@ -1,7 +1,13 @@
 /**
- *
  * Things to handle interactions by user
  */
+
+/**
+ * Saves the state of the tokens and it's tasks.
+ */
+let tokens = {}
+
+let tokenActions = ['sectorSelect', 'amountSelect', 'graph'];
 
 let touchCount = 0
 let ongoingTouches = []
@@ -40,6 +46,18 @@ function ongoingTouchIndexById(idToFind) {
     return -1    // not found
 }
 
+function getOpenActions() {
+    let openActions = tokenActions;
+
+    trackedDevices.forEach(device => {
+        openActions = openActions.filter(action => {
+            return device.action !== action;
+        });
+    })
+
+    return openActions;
+}
+
 function keyTyped(){
     if( key ==='m' || key ==='m'){
         threeDviewFlag=!threeDviewFlag
@@ -68,6 +86,9 @@ function keyTyped(){
     if(key === 'l' || key === 'L'){
         flagDataVisStyleRfrst = !flagDataVisStyleRfrst
     }
+    if (key === '1') {
+        switchTokenAction();
+    }
 }
 
 function mouseClicked() {
@@ -82,7 +103,19 @@ function listenMessages(){
         thisDevice.x = data.x * windowWidth
         thisDevice.y = data.y * windowHeight
         thisDevice.rotation = data.rot
-        trackedDevices.push(thisDevice)
+        let openActions = getOpenActions();
+        if (openActions && openActions.length > 0) {
+            thisDevice.action = openActions[0];
+        } else {
+            thisDevice.action = undefined;
+        }
+
+        trackedDevices.push(thisDevice);
+
+        console.log(trackedDevices);
+        console.log(getOpenActions());
+
+
         createHTML(data.id)
     })
     socket.on('updateDevice', function(data){
@@ -92,8 +125,16 @@ function listenMessages(){
                 element.x = data.x * windowWidth
                 element.y = data.y * windowHeight
                 element.rotation = data.rot
+
+                if (element.action === 'sectorSelect') {
+                    selectSectorByDegree(data.rot);
+                } else if (element.action === 'amountSelect') {
+                    setAmountOfActiveSector(data.rot);
+                }
             }
         })
+
+        //console.log(trackedDevices);
     })
     socket.on('removeDevice', function(data){
         let id = data.id
@@ -102,6 +143,20 @@ function listenMessages(){
                 trackedDevices.splice(index,1)
             }
         })
+
+        delete tokens[id];
         destroyHTML(data.id)
     })
+}
+
+function switchTokenAction() {
+    trackedDevices[0].action = getOpenActions()[0];
+    console.log(trackedDevices[0]);
+}
+
+function selectSectorByDegree(rotation) {
+
+    let index = round(map(rotation, 0, 360, 0, Object.keys(projectDrawDown).length));
+    activeSector = Object.keys(projectDrawDown)[index];
+    console.log(activeSector);
 }

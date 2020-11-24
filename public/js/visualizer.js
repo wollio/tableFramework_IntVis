@@ -1,13 +1,5 @@
 // render cylinder
-let heading = createVector(v2.x-v1.x, v2.y-v1.y);
-let midpoint =
-push();
-translate(midpoint);
-rotate(heading.heading() + PI/2.0);
-cylinder(20, heading.mag());
-pop();
-
-function drawCylinder(startPoint, endPoint, c) {
+function drawCylinder(startPoint, endPoint, c, radius = 5) {
     push();
     fill(c);
 
@@ -27,7 +19,7 @@ function drawCylinder(startPoint, endPoint, c) {
     rotateY(phi);
     rotateX(PI / 2.0);
 
-    cylinder(5, dist, 7, 1);
+    cylinder(radius, dist, 7, 1);
     //cone(4, 70);
     pop();
 }

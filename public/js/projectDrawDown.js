@@ -2,7 +2,7 @@
 let projectDrawDown = {
     electricity: {
         potential: 320.4,
-        activePercentage: 100.0
+        activePercentage: 0.0
     },
     food: {
         potential: 239.05,
@@ -30,7 +30,15 @@ let projectDrawDown = {
     }
 }
 
+let activeSector = 'electricity';
 let cummulativePercentage = 0.0;
+
+function setAmountOfActiveSector(rotation) {
+
+    projectDrawDown[activeSector].activePercentage = map(rotation, 0, 360, 0, 100);
+    console.log(projectDrawDown[activeSector].activePercentage);
+    updateCummulativePercentage();
+}
 
 /**
  *  updates the cummulative activePercentage value of each sector taking the total potential into account

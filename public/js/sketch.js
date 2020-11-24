@@ -276,8 +276,8 @@ function show3D() {
 }
 
 function show2d() {
-	let testPoint = screenPosition(-tPS.x, tPS.y, tPS.z)
-	let testPoint2 = screenPosition(-tPE.x, tPE.y, tPE.z)
+	let testPoint = screenPosition(tPS.x, tPS.y, tPS.z)
+	let testPoint2 = screenPosition(tPE.x, tPE.y, tPE.z)
 	let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
 	// in case the touch display or device is available use the touchX instead
 	if(isTouch ){
@@ -286,6 +286,8 @@ function show2d() {
 	// console.log(user.x , user.y)
 	let testPoint2Ref = createVector(testPoint2.x,testPoint2.y)
 	easycam.beginHUD()
+
+    drawEvents();
 
 	if(isTouch){
 		fill(0,0,255,100)

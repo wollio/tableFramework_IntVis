@@ -30,6 +30,18 @@ class TrackedDevice{
     }
 
     show(){
+
+        if (this.action === 'sectorSelect') {
+            if (activeSector === 'industry') {
+
+                //display industry
+            } else if (activeSector === 'electricity') {
+
+            }
+        } else if (this.action === 'amountSelect') {
+            //display amount select
+        }
+
         let radius = 45
         let lSize = map(this.smoothRotation,0,360,10,75)
         let rotX = (radius) * Math.cos(radians(this.smoothRotation))

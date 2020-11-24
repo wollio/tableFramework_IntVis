@@ -23,10 +23,6 @@ let projectDrawDown = {
     landSinks: {
         potential: 315.45,
         activePercentage: 0.0
-    },
-    oceanLandSinks: {
-        potential: 1.275,
-        activePercentage: 0.0
     }
 }
 

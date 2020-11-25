@@ -43,7 +43,7 @@ function displayHexPlusLabels(posX,posY,rotation){
 
 function hexagonShape(posX, posY){
 	push();
-    let size = 220
+    let size = 100
     beginShape()
     noFill()
     stroke(255)

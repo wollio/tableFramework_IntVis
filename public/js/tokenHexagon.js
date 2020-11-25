@@ -42,6 +42,7 @@ function displayHexPlusLabels(posX,posY,rotation){
 }
 
 function hexagonShape(posX, posY){
+	push();
     let size = 220
     beginShape()
     noFill()
@@ -51,6 +52,7 @@ function hexagonShape(posX, posY){
         vertex(posX + size * Math.cos(side * 2 * Math.PI / 6), posY+ size * Math.sin(side * 2 * Math.PI / 6))
     }
     endShape(CLOSE)
+	pop();
 }
 
 function hexagonLabel(rotation){

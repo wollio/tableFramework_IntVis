@@ -103,6 +103,7 @@ function listenMessages(){
         thisDevice.x = data.x * windowWidth
         thisDevice.y = data.y * windowHeight
         thisDevice.rotation = data.rot
+
         let openActions = getOpenActions();
         if (openActions && openActions.length > 0) {
             thisDevice.action = openActions[0];
@@ -148,11 +149,17 @@ function switchTokenAction() {
 
 function selectSectorByDegree(rotation) {
     let index = round(map(rotation, 0, 360, 0, Object.keys(projectDrawDown).length - 1));
-    activeSector = Object.keys(projectDrawDown)[index];
-    let projectDescription = document.getElementById('projectDrawDownInfoDescription');
-    let title = document.querySelector('#projectDrawDownInfo h3');
-    title.innerText = activeSector;
-    projectDescription.innerHTML = getActiveSectorProjectDescription();
-    let projectQRCode = document.getElementById('projectDrawDownInfoQrCode')
-    projectQRCode.src = `imgs/guiElements/qrCodes/${activeSector}.png`
+    let newSector = Object.keys(projectDrawDown)[index];
+
+    if (newSector != activeSector) {
+        activeSector = newSector;
+        let projectDescription = document.getElementById('projectDrawDownInfoDescription');
+        let title = document.querySelector('#projectDrawDownInfo h3');
+        title.innerText = activeSector;
+        projectDescription.innerHTML = getActiveSectorProjectDescription();
+        let projectQRCode = document.getElementById('projectDrawDownInfoQrCode')
+        projectQRCode.src = `imgs/guiElements/qrCodes/${activeSector}.png`;
+        let projectTitle = document.getElementById('projectDrawDownInfoTitle');
+        projectTitle.innerText = getActiveSectorProjectTitle();
+    }
 }

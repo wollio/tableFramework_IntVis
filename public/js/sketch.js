@@ -103,7 +103,7 @@ function preload() {
 
     myFont = loadFont('assets/Futura-Lig.otf')
 
-    openFullscreen()
+    //openFullscreen()
     init()
 }
 
@@ -327,13 +327,11 @@ function show2d() {
     line(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, -testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
 
 	if(trackedDevices.length>0){
-	    console.log("trackedDevicesFound")
 		trackedDevices.forEach( element => {
 			element.calculateRange()
 		})
 		trackedDevices.forEach(element =>{
 			if(element.inRange){
-			    console.log("inRange");
 				element.show()
 			}
 		})

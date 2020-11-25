@@ -34,7 +34,6 @@ class TrackedDevice {
     }
 
     show() {
-        console.log("show");
         if (this.action === 'sectorSelect') {
             displayHexPlusLabels(this.smoothPosition.x, this.smoothPosition.y, this.smoothRotation)
         } else if (this.action === 'amountSelect') {

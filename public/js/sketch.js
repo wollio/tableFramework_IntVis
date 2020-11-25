@@ -66,7 +66,7 @@ let colorBlue
 let pntsFromTIFF_co2 = []
 let pntsFromTIFF_refrst = []
 
-let flagCO2Data = false
+let flagCO2Data = true
 let flagRfrsData = false
 
 let flagDataVisStyleCO2 = true

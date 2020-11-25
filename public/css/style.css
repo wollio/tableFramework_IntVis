@@ -23,8 +23,6 @@ body {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-
-
 #testLabel{
 	position: absolute;
 	z-index: 1000;
@@ -79,6 +77,7 @@ body {
 }
 
 #info{
+	display: none;
 	width: 200px;
 	height: 300px;
 	padding: 10px;
@@ -96,6 +95,20 @@ body {
 	color:#ffffff;
 	font-size: 14px;
 	line-height: 15px;
+}
+
+#projectDrawDownInfo {
+	width: 200px;
+	height: 500px;
+	position: absolute;
+	top: 2rem;
+	left: 2rem;
+	z-index: 100002;
+
+}
+
+#projectDrawDownInfo img {
+	width: 100px;
 }
 
 

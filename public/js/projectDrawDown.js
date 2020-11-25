@@ -18,7 +18,7 @@ let projectDrawDown = {
     },
     industry: {
         potential: 136.6,
-        activePercentage: 100.0,
+        activePercentage: 0.0,
         title: "INDUSTRY",
         description: `
         <h5>Improve Materials</h5>

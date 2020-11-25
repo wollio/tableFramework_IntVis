@@ -243,49 +243,26 @@ p {
 }
 
 #projectDrawDownInfo img {
+    position: absolute;
 	width: 100px;
 }
 
-#foodbox {
-    margin-top: 58px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
+#everyBox {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: 2rem;
+    margin-top: 1em;
+    right: 2rem;
+    padding-right: 5rem;
+    z-index: 100005;
 }
 
-#industrybox {
-    margin-top: 30px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
-}
-
-#electricitybox {
-    margin-top: 30px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
-}
-
-#landSinksbox {
-    margin-top: 30px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
-}
-
-#buildingsbox {
-    margin-top: 30px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
-}
-
-#transportationbox {
-    margin-top: 30px;
-    margin-left: 3600px;
-    z-index: 10005;
-    position: relative;
+#everyBox > * {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .inline {
@@ -294,46 +271,6 @@ p {
     padding-right: 32px;
     font-family: Sui Generis Italic;
     font-size: 40px;
-}
-
-#restart {
-    margin-top: 40px;
-    margin-left: 3700px;
-    z-index: 10005;
-    position: relative;
-}
-
-.positionthatimg {
-    position:absolute;
-    right: 60px;
-    
-}
-
-#corn {
-    margin-top: -6px;
-}
-
-#industryimg {
-    margin-top: -8px;
-    margin-left:0px;
-}
-
-#energyimg {
-    margin-top: -2px;
-}
-
-#landimg{
-    margin-top: -12px;
-}
-
-#buildingimg{
-    margin-top: -2px;
-    margin-right: 4px;
-}
-
-#truck{
-    margin-top: -13px;
-    margin-right: -7px;
 }
 
 

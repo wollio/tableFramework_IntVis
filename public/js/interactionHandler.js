@@ -122,7 +122,7 @@ function listenMessages(){
                 if (element.action === 'sectorSelect') {
                     selectSectorByDegree(data.rot);
                 } else if (element.action === 'amountSelect') {
-                    setAmountOfActiveSector(element.rotation, data.rot);
+                    setAmountOfActiveSector(Math.round(element.rotation), Math.round(data.rot));
                 }
 
                 element.rotation = data.rot

@@ -272,4 +272,12 @@ p {
     font-size: 40px;
 }
 
+#legend {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    text-align: right;
+    z-index: 100004;
+}
+
 

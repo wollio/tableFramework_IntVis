@@ -90,12 +90,18 @@ function preload() {
     cloudImg = loadImage('../imgs/clouds_min.png');
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
-
+    
     co2 = loadImage('assets/data/co2_emissions.png')
     refrst = loadImage('assets/data/geodata_ref_potential.png')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
 
     textureGuiTriangleAmountDisplay = loadImage('../imgs/guiElements/trianlge_amount_display.png');
+    food = loadImage('../icons/food.svg');
+    energy = loadImage('../icons/energy.svg');
+    buildings = loadImage('../icons/buildings.svg');
+    industry = loadImage('../icons/industry.svg');
+    landsinks = loadImage('../icons/landsinks.svg');
+    transportation = loadImage('../icons/transportation.svg');
 
     socket.on('connected', function (data) {
         console.log('new client connected id:' + data.id)
@@ -201,6 +207,7 @@ function setup() {
     dataFromTIFFtoArray(refrst, pntsFromTIFF_refrst, 1.0)
 
     // tableControl = new CenterControl(320,475)
+    updatePercentage();
 }
 
 function draw() {

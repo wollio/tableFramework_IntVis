@@ -13,7 +13,7 @@ let cache = {
 };
 
 let earthImg, sky, cloudImg;
-let cloudEnabled = false;
+let cloudEnabled = true;
 
 let theta = 0.001
 let r = 400
@@ -28,7 +28,7 @@ let canvas
 let trackedDevices = []
 let threeDviewFlag = true
 let vectorMapFlag = false
-let pOIFlag = true
+let pOIFlag = false
 let flatMapFlag = false
 let myFont
 let tableControl
@@ -75,6 +75,8 @@ let flagDataVisStyleRfrst = true
 /*  full screen */
 let elem = document.documentElement
 
+let textureGuiTriangleAmountDisplay;
+
 function init() {
 
 }
@@ -86,13 +88,14 @@ function resize() {
 function preload() {
     earthImg = loadImage('../imgs/earth_3d_noclouds_mono5-hires.jpg')
     cloudImg = loadImage('../imgs/clouds_min.png');
-    //sky = loadImage('../imgs/sky5.jpg')
     earthMap = loadTable('assets/maps/earth.csv', '', '')
     loadData('assets/data/future_cities.csv')
 
     co2 = loadImage('assets/data/co2_emissions.png')
     refrst = loadImage('assets/data/geodata_ref_potential.png')
     // futureCitiesTable = loadTable('assets/data/future_cities.csv','','')
+
+    textureGuiTriangleAmountDisplay = loadImage('../imgs/guiElements/trianlge_amount_display.png');
 
     socket.on('connected', function (data) {
         console.log('new client connected id:' + data.id)
@@ -112,6 +115,7 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight, WEBGL)
     noStroke()
     textFont(myFont)
+    imageMode(CENTER);
 
     colorBlue = color(0, 0, 255);
 
@@ -206,9 +210,17 @@ function draw() {
 
     let user = createVector(mouseX, mouseY)
     show3D()
+    if(flagCO2Data){
+        visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
+    }
+    if(flagRfrsData){
+        visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
+    }
+
     show2d()
     showPointsOfInterest(cities.length - 2)
     showCityCylinders();
+
     showFlatMap(pointsEarth, color(0, 255, 0))
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
@@ -221,6 +233,9 @@ function draw() {
     if (flagRfrsData) {
         visualizeDataFromTIFF(pntsFromTIFF_refrst, flagDataVisStyleRfrst, color(0, 255, 100))
     }
+ 	// which will iterate through each data point and visualize it
+ 	// the flag is a boolean to display or hide the visualization
+
 }
 
 /**
@@ -229,8 +244,6 @@ function draw() {
 function showCityCylinders() {
     if (pOIFlag) {
         for (let i = 0; i < cities.length - 1; i++) {
-            // rename to : pOIx, pOIy, pOIz
-            //drawLineFromVector(pOI[i], pOI2[i], colorBlue);
             drawCylinder(pOI[i], pOI2[i], color(0, 255, 0));
         }
     }
@@ -337,6 +350,17 @@ function show2d() {
         })
     }
     easycam.endHUD()
+	if(trackedDevices.length>0){
+		trackedDevices.forEach( element => {
+			element.calculateRange()
+		})
+		trackedDevices.forEach(element =>{
+			if(element.inRange){
+				element.show()
+			}
+		})
+	}
+	easycam.endHUD()
 }
 
 // this function creates an HTML div element assigns the class trackedDivs to it, passes the uniqueId as id and adds some text inside

@@ -1,6 +1,13 @@
 // *** CLASS FOR THE TRACKED DEVICE *** //
 class TrackedDevice {
     constructor() {
+
+const RADIUSSHOWAMOUNT = 40;
+const PIE_WEIGHT = 20;
+const SIZE_TRIANGLE_AMOUNT_DISPLAY = 10;
+
+class TrackedDevice{
+    constructor(){
         this.uniqueId = -1
         this.identifier = -1
         this.x = 0.0
@@ -34,40 +41,40 @@ class TrackedDevice {
         if (this.action === 'sectorSelect') {
             displayHexPlusLabels(this.smoothPosition.x, this.smoothPosition.y, this.smoothRotation)
 
+            /*
+            let radius = 45
+            let lSize = map(this.smoothRotation,0,360,10,75)
+            let rotX = (radius) * Math.cos(radians(this.smoothRotation))
+            let rotY = (radius) * Math.sin(radians(this.smoothRotation))
+
+            fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
+            noStroke()
+            ellipse(this.smoothPosition.x,this.smoothPosition.y,radius*2 + lSize,radius*2 + lSize)
+            fill(255,255,100)
+            stroke(0)
+            strokeWeight(10)
+            circle(this.smoothPosition.x ,this.smoothPosition.y , radius*2)
+            stroke(0)
+            strokeWeight(10)
+            line(this.smoothPosition.x , this.smoothPosition.y  , this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
+
+            // DISPLAY DEGREES OF ROTATION
+            push()
+            translate(this.smoothPosition.x+rotX, this.smoothPosition.y+rotY)
+            rotate(radians(this.smoothRotation))
+            fill(255,255,100)
+            textSize(30)
+            // text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
+            text(Math.round(this.smoothRotation,3), 30,10)
+            pop()
+
+            // DISPLAY LABEL
+            this.thisLabel.update(this.smoothPosition.x,this.smoothPosition.y,this.sizeL, this.smoothRotation + 120)
+            noStroke()*/
+        } else if (this.action === 'amountSelect') {
+            this.showAmountSelect();
         }
-     else if (this.action === 'amountSelect') {
-        //display amount select
-    }
 
-    let radius = 45
-    let lSize = map(this.smoothRotation, 0, 360, 10, 75)
-    let rotX = (radius) * Math.cos(radians(this.smoothRotation))
-    let rotY = (radius) * Math.sin(radians(this.smoothRotation))
-
-    fill(255, 255, 100, 25 + map(this.smoothRotation, 0, 360, 0, 150))
-    noStroke()
-    ellipse(this.smoothPosition.x, this.smoothPosition.y, radius * 2 + lSize, radius * 2 + lSize)
-    fill(255, 255, 100)
-    stroke(0)
-    strokeWeight(10)
-    circle(this.smoothPosition.x, this.smoothPosition.y, radius * 2)
-    stroke(0)
-    strokeWeight(10)
-    line(this.smoothPosition.x, this.smoothPosition.y, this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
-
-    // DISPLAY DEGREES OF ROTATION
-    push()
-    translate(this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
-    rotate(radians(this.smoothRotation))
-    fill(255, 255, 100)
-    textSize(30)
-    // text(Math.round(this.smoothRotation,3) + " , " + Math.round(this.smoothPosition.x) + " , " + Math.round(this.smoothPosition.y), 30,10)
-    text(Math.round(this.smoothRotation, 3), 30, 10)
-    pop()
-
-    // DISPLAY LABEL
-    this.thisLabel.update(this.smoothPosition.x, this.smoothPosition.y, this.sizeL, this.smoothRotation + 120)
-    noStroke()
 }
 calculateRange() {
     this.update()
@@ -85,6 +92,20 @@ calculateRange() {
         let thisTriangle = new Triangle(windowWidth / 2 - sizeT, -sizeT, sizeT)
         thisTriangle.show()
         pop()
+
+        // CONDITION DEVICE OUT OF DRAWING RANGE
+        if(this.smoothPosition.x > windowWidth/2 || this.smoothPosition.x < 0 || this.smoothPosition.y>windowHeight/2 || this.smoothPosition.y<0){
+            // uncomment this to draw a line between the center of the drawing area and the center of the tracked device
+            // strokeWeight(2)
+            // stroke(0,255,0)
+            // line(windowWidth/4,windowHeight/2, this.smoothPosition.x,this.smoothPosition.y)
+            push()
+            translate(windowWidth/2,height/2)
+            rotate(radians(this.angle))
+            let sizeT = 30
+            let thisTriangle = new Triangle(windowWidth/2 - sizeT,-sizeT,sizeT)
+            thisTriangle.show()
+            pop()
 
         this.inRange = false
     } else {
@@ -112,4 +133,23 @@ radians(degrees) {
     let radians = degrees * (Math.PI / 180)
     return radians
 }
+showAmountSelect() {
+        noFill();
+        stroke(255);
+        strokeWeight(3);
+        circle(this.smoothPosition.x, this.smoothPosition.y, RADIUSSHOWAMOUNT);
+
+        let rotation = map(getActivePercentageOfActiveSector(), 0, 100, 0, TWO_PI);
+        let sizePie = RADIUSSHOWAMOUNT * 2 + PIE_WEIGHT;
+
+        push()
+        translate(this.smoothPosition.x, this.smoothPosition.y)
+        arc(0, 0, sizePie,  sizePie, 0, rotation);
+        fill(255);
+        textSize(30);
+        text(getActivePercentageOfActiveSector() + "%", RADIUSSHOWAMOUNT + PIE_WEIGHT, 10);
+        rotate(rotation + PI / 2);
+        image(textureGuiTriangleAmountDisplay, 0, - RADIUSSHOWAMOUNT + SIZE_TRIANGLE_AMOUNT_DISPLAY / 2 , SIZE_TRIANGLE_AMOUNT_DISPLAY, SIZE_TRIANGLE_AMOUNT_DISPLAY);
+        pop()
+    }
 }

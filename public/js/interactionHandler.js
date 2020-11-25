@@ -111,12 +111,6 @@ function listenMessages(){
         }
 
         trackedDevices.push(thisDevice);
-
-        console.log(trackedDevices);
-        console.log(getOpenActions());
-
-
-        createHTML(data.id)
     })
     socket.on('updateDevice', function(data){
         let id = data.id
@@ -124,17 +118,15 @@ function listenMessages(){
             if(element.uniqueId === id){
                 element.x = data.x * windowWidth
                 element.y = data.y * windowHeight
-                element.rotation = data.rot
-
                 if (element.action === 'sectorSelect') {
                     selectSectorByDegree(data.rot);
                 } else if (element.action === 'amountSelect') {
-                    setAmountOfActiveSector(data.rot);
+                    setAmountOfActiveSector(element.rotation, data.rot);
                 }
+
+                element.rotation = data.rot
             }
         })
-
-        //console.log(trackedDevices);
     })
     socket.on('removeDevice', function(data){
         let id = data.id
@@ -155,8 +147,12 @@ function switchTokenAction() {
 }
 
 function selectSectorByDegree(rotation) {
-
-    let index = round(map(rotation, 0, 360, 0, Object.keys(projectDrawDown).length));
+    let index = round(map(rotation, 0, 360, 0, Object.keys(projectDrawDown).length - 1));
     activeSector = Object.keys(projectDrawDown)[index];
-    console.log(activeSector);
+    let projectDescription = document.getElementById('projectDrawDownInfoDescription');
+    let title = document.querySelector('#projectDrawDownInfo h3');
+    title.innerText = activeSector;
+    projectDescription.innerText = getActiveSectorProjectDescription();
+    let projectQRCode = document.getElementById('projectDrawDownInfoQrCode')
+    projectQRCode.src = `imgs/guiElements/qrCodes/${activeSector}.png`
 }

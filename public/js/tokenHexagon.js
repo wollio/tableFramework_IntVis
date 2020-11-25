@@ -44,13 +44,13 @@ function displayHexPlusLabels(posX,posY,rotation){
 }
 
 function hexagonShape(posX, posY){
-    let x = 100
-    let y = 100
-    let size = 100
+    let x = 220
+    let y = 220
+    let size = 220
     beginShape()
     noFill()
     stroke(255)
-    strokeWeight(2)
+    strokeWeight(5)
     for (let side = 0 ; side < 7; side++) {
         vertex(posX + size * Math.cos(side * 2 * Math.PI / 6), posY+ size * Math.sin(side * 2 * Math.PI / 6))
     }

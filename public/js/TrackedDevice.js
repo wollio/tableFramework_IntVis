@@ -1,7 +1,7 @@
 // *** CLASS FOR THE TRACKED DEVICE *** //
-const RADIUSSHOWAMOUNT = 40;
-const PIE_WEIGHT = 20;
-const SIZE_TRIANGLE_AMOUNT_DISPLAY = 10;
+const RADIUSSHOWAMOUNT = 220; //40
+const PIE_WEIGHT = 150; //20
+const SIZE_TRIANGLE_AMOUNT_DISPLAY = 40; //10
 
 class TrackedDevice {
     constructor(){
@@ -86,11 +86,11 @@ class TrackedDevice {
     showAmountSelect() {
         noFill();
         stroke(255);
-        strokeWeight(3);
+        strokeWeight(5);
         circle(this.smoothPosition.x, this.smoothPosition.y, RADIUSSHOWAMOUNT);
 
         let rotation = map(getActivePercentageOfActiveSector(), 0, 100, 0, TWO_PI);
-        let sizePie = RADIUSSHOWAMOUNT * 2 + PIE_WEIGHT;
+        let sizePie = RADIUSSHOWAMOUNT + PIE_WEIGHT;
 
         push()
         translate(this.smoothPosition.x, this.smoothPosition.y)
@@ -99,7 +99,7 @@ class TrackedDevice {
         textSize(30);
         text(getActivePercentageOfActiveSector() + "%", RADIUSSHOWAMOUNT + PIE_WEIGHT, 10);
         rotate(rotation + PI / 2);
-        image(textureGuiTriangleAmountDisplay, 0, - RADIUSSHOWAMOUNT + SIZE_TRIANGLE_AMOUNT_DISPLAY / 2 , SIZE_TRIANGLE_AMOUNT_DISPLAY, SIZE_TRIANGLE_AMOUNT_DISPLAY);
+        image(textureGuiTriangleAmountDisplay, 0, - RADIUSSHOWAMOUNT - PIE_WEIGHT / 2 , SIZE_TRIANGLE_AMOUNT_DISPLAY, SIZE_TRIANGLE_AMOUNT_DISPLAY);
         pop()
     }
 }

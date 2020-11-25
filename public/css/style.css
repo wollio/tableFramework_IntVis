@@ -103,17 +103,17 @@ body {
 
 h1 {
   font-family: Sui Generis Bold Italic;
-    font-size: 14px;
+    font-size: 30px;
 }
 
 p {
   font-family: Sui Generis Italic;
-    font-size: 10px;
+    font-size: 20px;
 }
 
 .box{
-    width: 200px;
-    height: 200px;
+    width: 520px;
+    height: 520px;
     position: absolute;
     transform: translate(-50%,-50%);
     
@@ -121,93 +121,95 @@ p {
 .infobox{
     margin-top: -36px;
     margin-left: -40px;
-    width: 240px;
+    width: 535px;
     position: absolute;
     visibility: hidden;
 }
 
 #text1 {
-    margin-top: 80px;
+    margin-top: 52px;
+    margin-left: -412px;
 }
 
 #border1 {
-    border-top: 1px solid white;
+    border-top: 5px solid white;
     padding-top: 15px;
+    width: 535px;
 }
 
 #line2 {
-    width:100px;
-    border-top: 1px solid white;
+    width:220px;
+    border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: 99px;
-    margin-left: 49px;
+    margin-top: 252px;
+    margin-left: -101px;
 }
 
 #text2 {
-    margin-left: -82px;
-    margin-top: 16px;
+    margin-left: -321px;
+    margin-top: 37px;
 }
 
 #border2 {
-    border-top: 1px solid white;
-    width: 156px;
+    border-top: 5px solid white;
+    width: 276px;
     margin-top: 11px;
 }
 
 #line3 {
-    width:100px;
-    border-top: 1px solid white;
+    width:220px;
+    border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: 99px;
-    margin-left: 200px;
+    margin-top: 252px;
+    margin-left: 229px;
 }
 
 #text3 {
-    padding-left: 275px;
-    margin-top: 16px;
-    width: 160px;
+    padding-left: 393px;
+    margin-top: 35px;
+    width: 280px;
 }
 
 #border3 {
-    border-top: 1px solid white;
-    width: 108px;
+    border-top: 5px solid white;
+    width: 228px;
     margin-top: 11px;
 }
 
 #text4 {
-    padding-left: 313px;
-    margin-top: -65px;
-    width: 160px;
+    padding-left: 432px;
+    margin-top: -105px;
+    width: 280px;
 }
 #border4 {
-    border-top: 1px solid white;
-    width: 142px;
+    border-top: 5px solid white;
+    width: 262px;
     margin-top: 11px;
     margin-left: -40px;
 }
 #line5 {
-    width:100px;
-    border-top: 1px solid white;
+    width:220px;
+    border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: -210px;
-    margin-left: 199px;
+    margin-top: -366px;
+    margin-left: 226px;
 }
 
 #text5 {
-    padding-left: 274px;
-    margin-top: -80px;
-    width: 160px;
+    padding-left: 389px;
+    margin-top: -174px;
+    width: 360px;
 }
 
 #border5 {
-    border-top: 1px solid white;
-    width: 90px;
+    border-top: 5px solid white;
+    width: 210px;
     margin-top: 11px;
 }
 
 #line6 {
-    width:100px;
-    border-top: 1px solid white;
+    width:220px;
+    border-top: 5px solid white;
     transform: rotate(60deg);
     margin-top: -258px;
     margin-left: -219px;
@@ -216,12 +218,12 @@ p {
 #text6 {
     margin-left: -359px;
     margin-top: -82px;
-    width: 160px;
+    width: 280px;
 }
 
 #border6 {
     border-top: 1px solid white;
-    width: 165px;
+    width: 285px;
     margin-top: 12px;
 }
 

@@ -44,7 +44,7 @@ class TrackedDevice {
     calculateRange() {
         this.update()
         // CONDITION DEVICE OUT OF DRAWING RANGE
-        if (this.smoothPosition.x > windowWidth / 2 || this.smoothPosition.x < 0 || this.smoothPosition.y > windowHeight / 2 || this.smoothPosition.y < 0) {
+        if (this.smoothPosition.x > windowWidth || this.smoothPosition.x < 0 || this.smoothPosition.y > windowHeight || this.smoothPosition.y < 0) {
             // uncomment this to draw a line between the center of the drawing area and the center of the tracked device
             // strokeWeight(2)
             // stroke(0,255,0)

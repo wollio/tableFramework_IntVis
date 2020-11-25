@@ -152,7 +152,7 @@ function selectSectorByDegree(rotation) {
     let projectDescription = document.getElementById('projectDrawDownInfoDescription');
     let title = document.querySelector('#projectDrawDownInfo h3');
     title.innerText = activeSector;
-    projectDescription.innerText = getActiveSectorProjectDescription();
+    projectDescription.innerHTML = getActiveSectorProjectDescription();
     let projectQRCode = document.getElementById('projectDrawDownInfoQrCode')
     projectQRCode.src = `imgs/guiElements/qrCodes/${activeSector}.png`
 }

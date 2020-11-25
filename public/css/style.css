@@ -101,7 +101,7 @@ body {
 
 
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
   font-family: Sui Generis Bold Italic;
     font-size: 30px;
 }
@@ -228,13 +228,11 @@ p {
 }
 
 #projectDrawDownInfo {
-	width: 200px;
-	height: 500px;
+	width: 20%;
 	position: absolute;
 	top: 2rem;
 	left: 2rem;
 	z-index: 100002;
-
 }
 
 #projectDrawDownInfo img {

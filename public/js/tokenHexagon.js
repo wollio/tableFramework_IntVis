@@ -24,8 +24,6 @@ function displayHexPlusLabels(posX,posY,rotation){
     fifthDiv.style.zIndex = 100003
     sixthDiv.style.zIndex = 100003
 
-	console.log(posX);
-
     firstDiv.style.left = (left - 300) + 'px'
     firstDiv.style.top = (top - 70) + 'px'
     secondDiv.style.left = (left - 134) + 'px'
@@ -44,8 +42,6 @@ function displayHexPlusLabels(posX,posY,rotation){
 }
 
 function hexagonShape(posX, posY){
-    let x = 220
-    let y = 220
     let size = 220
     beginShape()
     noFill()
@@ -59,10 +55,7 @@ function hexagonShape(posX, posY){
 
 function hexagonLabel(rotation){
 
-	let idLabel = int(map(rotation,1,360,1,6))
-	console.log(idLabel)
-
-	if(idLabel == 1){
+	if(activeSector == 'food') {
 		firstDiv.style.visibility = "visible";
 		secondDiv.style.visibility = "";
 		thirdDiv.style.visibility = "";
@@ -70,7 +63,7 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "";
 		sixthDiv.style.visibility = "";
 	}
-	if(idLabel == 2){
+	if(activeSector == 'industry') {
 		firstDiv.style.visibility = "";
 		secondDiv.style.visibility = "visible";
 		thirdDiv.style.visibility = "";
@@ -78,7 +71,7 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "";
 		sixthDiv.style.visibility = "";
 	}
-	if(idLabel == 3){
+	if(activeSector == 'electricity') {
 		firstDiv.style.visibility = "";
 		secondDiv.style.visibility = "";
 		thirdDiv.style.visibility = "visible";
@@ -86,7 +79,7 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "";
 		sixthDiv.style.visibility = "";
 	}
-	if(idLabel == 4){
+	if(activeSector == 'landSinks') {
 		firstDiv.style.visibility = "";
 		secondDiv.style.visibility = "";
 		thirdDiv.style.visibility = "";
@@ -94,7 +87,7 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "";
 		sixthDiv.style.visibility = "";
 	}
-	if(idLabel == 5){
+	if(activeSector == 'buildings') {
 		firstDiv.style.visibility = "";
 		secondDiv.style.visibility = "";
 		thirdDiv.style.visibility = "";
@@ -102,7 +95,7 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "visible";
 		sixthDiv.style.visibility = "";
 	}	
-    if(idLabel == 6){
+    if(activeSector == 'transportation') {
 		firstDiv.style.visibility = "";
 		secondDiv.style.visibility = "";
 		thirdDiv.style.visibility = "";
@@ -110,6 +103,5 @@ function hexagonLabel(rotation){
 		fifthDiv.style.visibility = "";
 		sixthDiv.style.visibility = "visible";
 	}
-	// .... 
 }
 

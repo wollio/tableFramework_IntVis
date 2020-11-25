@@ -120,7 +120,7 @@ function setup() {
     colorBlue = color(0, 0, 255);
 
     // resizing / downscaling the resolution of the image-data
-    co2.resize(windowWidth / 7, windowHeight / 7)
+    co2.resize(windowWidth / 12, windowHeight / 12)
     refrst.resize(windowWidth / 8, windowHeight / 8)
 
     if (!easycamIntialized) {
@@ -211,10 +211,10 @@ function draw() {
     let user = createVector(mouseX, mouseY)
     show3D()
     if(flagCO2Data){
-        visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
+        visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0), 'co2')
     }
     if(flagRfrsData){
-        visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
+        visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100), 'reforestation')
     }
 
     show2d()

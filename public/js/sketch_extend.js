@@ -32,9 +32,9 @@ function dataFromTIFFtoArray(_img,  _pntsFromTIFF, _scale) {
 }
 // function iterates through the objects inside the corresponding array 
 // and calls the function display(...) from each object
-function visualizeDataFromTIFF(_pntsFromTIFF, _visFlag, _c){
+function visualizeDataFromTIFF(_pntsFromTIFF, _visFlag, _c, type){
   _pntsFromTIFF.forEach(element => {
-      element.display(_visFlag,_c)
+      element.display(_visFlag,_c, type)
   })
 }
 // a class to store each Pixel as data point
@@ -59,14 +59,18 @@ class DataPointGeoTIFF {
   }
 
   updateValue() {
-      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5 * cummulativePercentage / 100;
+      this.pointWeight = map(this.value, 0, 255, 0, 30) * 5 * abs(cummulativePercentage / 100 - 1);
       this.loc3Dend = toCartesian(this.lat, this.lon, this.radius + this.pointWeight);
   }
 
   // first parameter is a boolean for the visualization style and second one is the display color
-  display(visStyle,c){
+  display(visStyle,c, type = 'co2'){
     if(this.value>0){
-        this.updateValue();
+
+        if (type === 'co2') {
+            this.updateValue();
+        }
+
       if(visStyle){
           //drawLineFromVector(this.loc3D, this.loc3Dend, c, 1);
           drawCylinder(this.loc3D, this.loc3Dend, c, map(this.value, 0, 255, 2, 5));

@@ -101,7 +101,7 @@ function preload() {
         console.log('new client connected id:' + data.id)
     })
 
-    myFont = loadFont('assets/Futura-Lig.otf')
+    myFont = loadFont('assets/SUIGBI__.ttf')
 
     //openFullscreen()
     init()

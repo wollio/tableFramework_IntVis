@@ -1,7 +1,8 @@
 // *** CLASS FOR THE TRACKED DEVICE *** //
+
 const RADIUSSHOWAMOUNT = 220; //40
 const PIE_WEIGHT = 150; //20
-const SIZE_TRIANGLE_AMOUNT_DISPLAY = 40; //10
+const SIZE_TRIANGLE_AMOUNT_DISPLAY = 30; //10
 
 class TrackedDevice {
     constructor(){
@@ -96,9 +97,9 @@ class TrackedDevice {
         arc(0, 0, sizePie,  sizePie, 0, rotation);
         fill(255);
         textSize(30);
-        text(getActivePercentageOfActiveSector() + "%", RADIUSSHOWAMOUNT + PIE_WEIGHT, 10);
+        text(getActivePercentageOfActiveSector() + "%", RADIUSSHOWAMOUNT, 10);
         rotate(rotation + PI / 2);
-        image(textureGuiTriangleAmountDisplay, 0, - RADIUSSHOWAMOUNT - PIE_WEIGHT / 2 , SIZE_TRIANGLE_AMOUNT_DISPLAY, SIZE_TRIANGLE_AMOUNT_DISPLAY);
+        image(textureGuiTriangleAmountDisplay, 0, - RADIUSSHOWAMOUNT + PIE_WEIGHT / 2 , SIZE_TRIANGLE_AMOUNT_DISPLAY, SIZE_TRIANGLE_AMOUNT_DISPLAY);
         pop()
     }
 }

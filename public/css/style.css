@@ -246,4 +246,48 @@ p {
 	width: 100px;
 }
 
+#foodbox {
+    margin-top: 40px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+#industrybox {
+    margin-top: 100px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+#electricitybox {
+    margin-top: 160px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+#landSinksbox {
+    margin-top: 220px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+#buildingsbox {
+    margin-top: 280px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+#transportationbox {
+    margin-top: 340px;
+    margin-left: 3740px;
+    z-index: 10005;
+    position: relative;
+}
+
+
+
 

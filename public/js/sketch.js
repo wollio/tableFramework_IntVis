@@ -103,7 +103,7 @@ function preload() {
 
     myFont = loadFont('assets/Futura-Lig.otf')
 
-    openFullscreen()
+    //openFullscreen()
     init()
 }
 

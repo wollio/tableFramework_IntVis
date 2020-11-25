@@ -135,7 +135,7 @@ p {
 
 #text1 {
     margin-top: 52px;
-    margin-left: -412px;
+    margin-left: -294px;
 }
 
 #border1 {
@@ -148,12 +148,12 @@ p {
     width:220px;
     border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: 252px;
-    margin-left: -101px;
+    margin-top: 149px;
+    margin-left: -41px;
 }
 
 #text2 {
-    margin-left: -321px;
+    margin-left: -262px;
     margin-top: 37px;
 }
 
@@ -167,13 +167,13 @@ p {
     width:220px;
     border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: 252px;
-    margin-left: 229px;
+    margin-top: 149px;
+    margin-left: 167px;
 }
 
 #text3 {
-    padding-left: 393px;
-    margin-top: 35px;
+    padding-left: 332px;
+    margin-top: 37px;
     width: 280px;
 }
 
@@ -184,7 +184,7 @@ p {
 }
 
 #text4 {
-    padding-left: 432px;
+    padding-left: 312px;
     margin-top: -105px;
     width: 280px;
 }
@@ -195,15 +195,15 @@ p {
     margin-left: -40px;
 }
 #line5 {
-    width:220px;
+    width: 220px;
     border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: -366px;
-    margin-left: 226px;
+    margin-top: -265px;
+    margin-left: 173px;
 }
 
 #text5 {
-    padding-left: 389px;
+    padding-left: 337px;
     margin-top: -174px;
     width: 360px;
 }
@@ -218,13 +218,13 @@ p {
     width:220px;
     border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: -415px;
-    margin-left: -368px;
+    margin-top: -315px;
+    margin-left: -308px;
 }
 
 #text6 {
-    margin-left: -599px;
-    margin-top: -170px;
+    margin-left: -537px;
+    margin-top: -173px;
     width: 280px;
 }
 

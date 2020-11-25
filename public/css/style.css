@@ -145,16 +145,16 @@ p {
 }
 
 #line2 {
-    width:220px;
+    width:100px;
     border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: 149px;
-    margin-left: -41px;
+    margin-top: 97px;
+    margin-left: 48px;
 }
 
 #text2 {
-    margin-left: -262px;
-    margin-top: 37px;
+    margin-left: -203px;
+    margin-top: -36px;
 }
 
 #border2 {
@@ -164,16 +164,16 @@ p {
 }
 
 #line3 {
-    width:220px;
+    width: 100px;
     border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: 149px;
-    margin-left: 167px;
+    margin-top: 95px;
+    margin-left: 198px;
 }
 
 #text3 {
-    padding-left: 332px;
-    margin-top: 37px;
+    padding-left: 273px;
+    margin-top: -36px;
     width: 280px;
 }
 
@@ -195,16 +195,16 @@ p {
     margin-left: -40px;
 }
 #line5 {
-    width: 220px;
+    width: 100px;
     border-top: 5px solid white;
     transform: rotate(-60deg);
-    margin-top: -265px;
-    margin-left: 173px;
+    margin-top: -212px;
+    margin-left: 200px;
 }
 
 #text5 {
-    padding-left: 337px;
-    margin-top: -174px;
+    padding-left: 275px;
+    margin-top: -120px;
     width: 360px;
 }
 
@@ -215,22 +215,22 @@ p {
 }
 
 #line6 {
-    width:220px;
+    width:100px;
     border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: -315px;
-    margin-left: -308px;
+    margin-top: -262px;
+    margin-left: -219px;
 }
 
 #text6 {
-    margin-left: -537px;
-    margin-top: -173px;
-    width: 280px;
+    margin-left: -511px;
+    margin-top: -122px;
+    width: 315px;
 }
 
 #border6 {
     border-top: 5px solid white;
-    width: 285px;
+    width: 317px;
     margin-top: 12px;
 }
 

@@ -1,5 +1,5 @@
 // *** CLASS FOR THE TRACKED DEVICE *** //
-const RADIUSSHOWAMOUNT = 40;
+const RADIUSSHOWAMOUNT = 80;
 const PIE_WEIGHT = 20;
 const SIZE_TRIANGLE_AMOUNT_DISPLAY = 10;
 
@@ -34,7 +34,6 @@ class TrackedDevice {
     }
 
     show() {
-        console.log("show");
         if (this.action === 'sectorSelect') {
             displayHexPlusLabels(this.smoothPosition.x, this.smoothPosition.y, this.smoothRotation)
         } else if (this.action === 'amountSelect') {

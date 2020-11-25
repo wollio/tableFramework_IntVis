@@ -35,11 +35,31 @@ class TrackedDevice {
     }
 
     show() {
+
+        let radius = 45
+        let lSize = map(this.smoothRotation,0,360,10,75)
+        let rotX = (0 + radius) * Math.cos(radians(this.smoothRotation))
+        let rotY = (0+ radius) * Math.sin(radians(this.smoothRotation))
+
+        fill(255,255,100, 25+map(this.smoothRotation,0,360,0,150))
+        noStroke()
+        ellipse(this.smoothPosition.x,this.smoothPosition.y,radius*2 + lSize,radius*2 + lSize)
+        fill(255,255,100)
+        stroke(0)
+        strokeWeight(10)
+        circle(this.smoothPosition.x ,this.smoothPosition.y , radius*2)
+        stroke(0)
+        strokeWeight(10)
+        line(this.smoothPosition.x , this.smoothPosition.y  , this.smoothPosition.x + rotX, this.smoothPosition.y + rotY)
+
         if (this.action === 'sectorSelect') {
             displayHexPlusLabels(this.smoothPosition.x, this.smoothPosition.y, this.smoothRotation)
         } else if (this.action === 'amountSelect') {
             this.showAmountSelect();
         }
+
+
+
     }
     calculateRange() {
         this.update()

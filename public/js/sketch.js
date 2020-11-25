@@ -220,7 +220,7 @@ function draw() {
     let user = createVector(mouseX, mouseY)
     show3D()
     if(flagCO2Data){
-        visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0), 'co2')
+        visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(50,140, 255, 100), 'co2')
     }
     if(flagRfrsData){
         visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100), 'reforestation')
@@ -233,17 +233,6 @@ function draw() {
     showFlatMap(pointsEarth, color(0, 255, 0))
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
-    // here we call the function visualize and pass the desired arraylist
-    // which will iterate through each data point and visualize it
-    // the flag is a boolean to display or hide the visualization
-    if (flagCO2Data) {
-        visualizeDataFromTIFF(pntsFromTIFF_co2, flagDataVisStyleCO2, color(255, 0, 0))
-    }
-    if (flagRfrsData) {
-        visualizeDataFromTIFF(pntsFromTIFF_refrst, flagDataVisStyleRfrst, color(0, 255, 100))
-    }
- 	// which will iterate through each data point and visualize it
- 	// the flag is a boolean to display or hide the visualization
 
 }
 
@@ -320,20 +309,9 @@ function show2d() {
         circle(touchX, touchY, 50)
     }
     fill(255, 0, 0)
-    noStroke()
-    if (user.dist(testPoint) < 55) {
-        circle(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 10)
-    } else {
-        circle(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 1)
-    }
-    if (user.dist(testPoint2) < 55) {
-        circle(-testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 10)
-    } else {
-        circle(-testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 1)
-    }
     stroke(255, 0, 0)
     strokeWeight(0.5)
-    line(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, -testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
+    //line(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, -testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
 
 	if(trackedDevices.length>0){
 		trackedDevices.forEach( element => {

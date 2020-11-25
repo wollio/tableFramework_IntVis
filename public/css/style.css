@@ -99,11 +99,17 @@ body {
 }
 
 
+h1 {
+    font-size: 30px;
+}
 
+h2, h3, h4, h5, h6 {
+    font-size: 25px;
+}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: Sui Generis Bold Italic;
-    font-size: 30px;
+  margin-bottom: 20px;
 }
 
 p {
@@ -124,6 +130,7 @@ p {
     width: 535px;
     position: absolute;
     visibility: hidden;
+    z-index: 100006;
 }
 
 #text1 {
@@ -211,18 +218,18 @@ p {
     width:220px;
     border-top: 5px solid white;
     transform: rotate(60deg);
-    margin-top: -258px;
-    margin-left: -219px;
+    margin-top: -415px;
+    margin-left: -368px;
 }
 
 #text6 {
-    margin-left: -359px;
-    margin-top: -82px;
+    margin-left: -599px;
+    margin-top: -170px;
     width: 280px;
 }
 
 #border6 {
-    border-top: 1px solid white;
+    border-top: 5px solid white;
     width: 285px;
     margin-top: 12px;
 }

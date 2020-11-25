@@ -326,36 +326,14 @@ function show2d() {
     strokeWeight(0.5)
     line(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, -testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
 
-    if (trackedDevices.length > 0) {
-
-        trackedDevices.forEach(element => {
-            element.calculateRange()
-            // uncomment this if the tableControl object is available
-            // tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
-        })
-
-        // you can rename this trackedDevices - call them tokens for instance
-        trackedDevices.forEach(element => {
-            if (element.inRange) {
-                element.show()
-                fill(200, 0, 0)
-                ellipse(element.smoothPosition.x + 100, element.smoothPosition.y + 100, 20, 20)
-                // if(elemnt.uniqueId == 52){ /* example of a loop accessing an specific uniqueId  to do something specific */}
-
-                // access the identifier : element.identifier // changes everytime you add or create a new object on screen
-                // access the uniqueId : element.uniqueId // stays the same always for each tracked object
-                text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
-            }
-            updateHTML(element.smoothPosition.x, element.smoothPosition.x, element.uniqueId)
-        })
-    }
-    easycam.endHUD()
 	if(trackedDevices.length>0){
+	    console.log("trackedDevicesFound")
 		trackedDevices.forEach( element => {
 			element.calculateRange()
 		})
 		trackedDevices.forEach(element =>{
 			if(element.inRange){
+			    console.log("inRange");
 				element.show()
 			}
 		})

@@ -8,8 +8,6 @@ let sixthDiv
 
 
 function displayHexPlusLabels(posX,posY,rotation){
-
-
  	firstDiv = document.getElementById('first')
     secondDiv = document.getElementById('second')
     thirdDiv = document.getElementById('third')
@@ -19,14 +17,14 @@ function displayHexPlusLabels(posX,posY,rotation){
     let left = posX
     let top = posY
 
+    firstDiv.style.zIndex = 100003
+    secondDiv.style.zIndex = 100003
+    thirdDiv.style.zIndex = 100003
+    fourthDiv.style.zIndex = 100003
+    fifthDiv.style.zIndex = 100003
+    sixthDiv.style.zIndex = 100003
 
-
-    firstDiv.style.zIndex = 100000
-    secondDiv.style.zIndex = 100000
-    thirdDiv.style.zIndex = 100000
-    fourthDiv.style.zIndex = 100000
-    fifthDiv.style.zIndex = 100000
-    sixthDiv.style.zIndex = 100000
+	console.log(posX);
 
     firstDiv.style.left = (left - 300) + 'px'
     firstDiv.style.top = (top - 70) + 'px'
@@ -45,8 +43,6 @@ function displayHexPlusLabels(posX,posY,rotation){
 	hexagonLabel(rotation)
 }
 
-
-
 function hexagonShape(posX, posY){
     let x = 100
     let y = 100
@@ -56,7 +52,6 @@ function hexagonShape(posX, posY){
     stroke(255)
     strokeWeight(2)
     for (let side = 0 ; side < 7; side++) {
-
         vertex(posX + size * Math.cos(side * 2 * Math.PI / 6), posY+ size * Math.sin(side * 2 * Math.PI / 6))
     }
     endShape(CLOSE)

@@ -240,47 +240,61 @@ p {
 }
 
 #foodbox {
-    margin-top: 40px;
-    margin-left: 3740px;
+    margin-top: 58px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
 #industrybox {
-    margin-top: 100px;
-    margin-left: 3740px;
+    margin-top: 30px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
 #electricitybox {
-    margin-top: 160px;
-    margin-left: 3740px;
+    margin-top: 30px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
 #landSinksbox {
-    margin-top: 220px;
-    margin-left: 3740px;
+    margin-top: 30px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
 #buildingsbox {
-    margin-top: 280px;
-    margin-left: 3740px;
+    margin-top: 30px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
 #transportationbox {
-    margin-top: 340px;
-    margin-left: 3740px;
+    margin-top: 30px;
+    margin-left: 3666px;
     z-index: 10005;
     position: relative;
 }
 
+.inline {
+    display: inline;
+    position: relative;
+    padding-right: 32px;
+    font-family: Sui Generis Italic;
+    font-size: 40px;
+}
+
+#restart {
+    margin-top: 40px;
+    margin-left: 3700px;
+    z-index: 10005;
+    position: relative;
+}
 
 
 

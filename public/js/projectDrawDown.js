@@ -68,22 +68,31 @@ function setAmountOfActiveSector(oldRotation, newRotation) {
 
 function updatePercentage() {
     let e = document.getElementById("foodPercentageDisplay");
-    e.innerText = projectDrawDown.food.activePercentage;
+    e.innerText = projectDrawDown.food.activePercentage + " %";
 
     e = document.getElementById("industryPercentageDisplay");
-    e.innerText = projectDrawDown.industry.activePercentage;
+    e.innerText = projectDrawDown.industry.activePercentage + " %";
 
     e = document.getElementById("electricityPercentageDisplay");
-    e.innerText = projectDrawDown.electricity.activePercentage;
+    e.innerText = projectDrawDown.electricity.activePercentage + " %";
 
     e = document.getElementById("landSinksPercentageDisplay");
-    e.innerText = projectDrawDown.landSinks.activePercentage;
+    e.innerText = projectDrawDown.landSinks.activePercentage + " %";
 
     e = document.getElementById("buildingsPercentageDisplay");
-    e.innerText = projectDrawDown.buildings.activePercentage;
+    e.innerText = projectDrawDown.buildings.activePercentage + " %";
 
     e = document.getElementById("transportationPercentageDisplay");
-    e.innerText = projectDrawDown.transportation.activePercentage;
+    e.innerText = projectDrawDown.transportation.activePercentage + " %";
+}
+
+function resetProjectDrawdown(){
+    
+    Object.keys(projectDrawDown).forEach(key => {
+        projectDrawDown[key].activePercentage=0;
+    });
+    
+    
 }
 /**
  *  updates the cummulative activePercentage value of each sector taking the total potential into account

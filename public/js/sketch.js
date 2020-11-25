@@ -122,7 +122,9 @@ function setup() {
     noStroke()
     textFont(myFont)
     imageMode(CENTER);
-
+    document.getElementById("restart").addEventListener("click", () => {
+        resetProjectDrawdown()
+    });
     colorBlue = color(0, 0, 255);
 
     // resizing / downscaling the resolution of the image-data

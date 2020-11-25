@@ -1,7 +1,13 @@
-@font-face{
-	font-family:"Futura-Light";
-	src:url("/assets/Futura-Lig.otf");
+@font-face {
+  font-family: Sui Generis Bold Italic;
+  src: url(../assets/SUIGBI__.ttf);
 }
+
+@font-face {
+  font-family: Sui Generis Italic;
+  src: url(../assets/SUIGI___.ttf);
+}
+
 
 body { 
 	position: absolute;
@@ -92,10 +98,132 @@ body {
 #info:hover{
 	opacity: 1.0;
 }
-#info p{
-	color:#ffffff;
-	font-size: 14px;
-	line-height: 15px;
+
+
+
+
+h1 {
+  font-family: Sui Generis Bold Italic;
+    font-size: 14px;
+}
+
+p {
+  font-family: Sui Generis Italic;
+    font-size: 10px;
+}
+
+.box{
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    
+}
+.infobox{
+    margin-top: -36px;
+    margin-left: -40px;
+    width: 240px;
+    position: absolute;
+    visibility: hidden;
+}
+
+#text1 {
+    margin-top: 80px;
+}
+
+#border1 {
+    border-top: 1px solid white;
+    padding-top: 15px;
+}
+
+#line2 {
+    width:100px;
+    border-top: 1px solid white;
+    transform: rotate(-60deg);
+    margin-top: 99px;
+    margin-left: 49px;
+}
+
+#text2 {
+    margin-left: -82px;
+    margin-top: 16px;
+}
+
+#border2 {
+    border-top: 1px solid white;
+    width: 156px;
+    margin-top: 11px;
+}
+
+#line3 {
+    width:100px;
+    border-top: 1px solid white;
+    transform: rotate(60deg);
+    margin-top: 99px;
+    margin-left: 200px;
+}
+
+#text3 {
+    padding-left: 275px;
+    margin-top: 16px;
+    width: 160px;
+}
+
+#border3 {
+    border-top: 1px solid white;
+    width: 108px;
+    margin-top: 11px;
+}
+
+#text4 {
+    padding-left: 313px;
+    margin-top: -65px;
+    width: 160px;
+}
+#border4 {
+    border-top: 1px solid white;
+    width: 142px;
+    margin-top: 11px;
+    margin-left: -40px;
+}
+#line5 {
+    width:100px;
+    border-top: 1px solid white;
+    transform: rotate(-60deg);
+    margin-top: -210px;
+    margin-left: 199px;
+}
+
+#text5 {
+    padding-left: 274px;
+    margin-top: -80px;
+    width: 160px;
+}
+
+#border5 {
+    border-top: 1px solid white;
+    width: 90px;
+    margin-top: 11px;
+}
+
+#line6 {
+    width:100px;
+    border-top: 1px solid white;
+    transform: rotate(60deg);
+    margin-top: -258px;
+    margin-left: -219px;
+}
+
+#text6 {
+    margin-left: -359px;
+    margin-top: -82px;
+    width: 160px;
+}
+
+#border6 {
+    border-top: 1px solid white;
+    width: 165px;
+    margin-top: 12px;
 }
 
 

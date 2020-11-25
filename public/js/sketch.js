@@ -24,7 +24,7 @@ let pOI2 = []
 let socket = io()
 
 let tPS, tPE // testPointStart , testPointEnd of Spike 
-let canvas 
+let canvas
 let trackedDevices = []
 let threeDviewFlag = true
 let vectorMapFlag = false
@@ -38,12 +38,13 @@ let seaColor = [100, 120, 255, 255];
 let zurich
 let cdmx
 // apply rotations of the textured sphere for accurate UV projection of the earth map
-let rMX = -90/* -90 */
-let rMY = 90/* 90 */
+let rMX = -90 /* -90 */
+let rMY = 90 /* 90 */
 let rMZ = 0
 
 let easycamIntialized = false
-let touchX = 0, touchY = 0
+let touchX = 0,
+    touchY = 0
 
 let earthMap
 let screenPointsEarth = []
@@ -62,7 +63,7 @@ let colorBlue
 // these variables are the array lists of objects containing data points extracted form the
 // simplified geoTIFF image(s)
 // remember always to declare arrays as empty using square brackets: "let yourArrayName = []"
-let pntsFromTIFF_co2  = []
+let pntsFromTIFF_co2 = []
 let pntsFromTIFF_refrst = []
 
 let flagCO2Data = false
@@ -103,8 +104,8 @@ function preload() {
     init()
 }
 
-function resize(){
-	init()
+function resize() {
+    init()
 }
 
 function setup() {
@@ -116,10 +117,13 @@ function setup() {
 
     // resizing / downscaling the resolution of the image-data
     co2.resize(windowWidth / 7, windowHeight / 7)
-    refrst.resize(windowWidth/8, windowHeight/8)
+    refrst.resize(windowWidth / 8, windowHeight / 8)
 
     if (!easycamIntialized) {
-        easycam = new Dw.EasyCam(this._renderer, {distance: 1500, center: [0, 0, 0]})
+        easycam = new Dw.EasyCam(this._renderer, {
+            distance: 1500,
+            center: [0, 0, 0]
+        })
         easycam.setDistanceMin(100)
         easycam.setDistanceMax(r * 60)
         easycamIntialized = true
@@ -180,17 +184,17 @@ function setup() {
     listenMessages()
 
     // here we are calling the function dataFromTIFFtoArray
- 	// which you can find on the file sketch_extend.js inside the same js folder
- 	// this function reads each pixel and passes its x y location to a custom
- 	// data point object, which converts the x y to 3D point in an spheric system
- 	// the points contain x y location in 2D geo system(lon lat) as well as 3D xyz
- 	// as well as a value, which is just the brightness of each pixel
- 	// once the pixel is handeld an object is created and pushed into the list in the draw we access
- 	// this list and iterate through each of the data points in order to visualize them or interact
- 	// from co2
- 	dataFromTIFFtoArray(co2,pntsFromTIFF_co2,5.0)
- 	// from rfrst
- 	dataFromTIFFtoArray(refrst,pntsFromTIFF_refrst,1.0)
+    // which you can find on the file sketch_extend.js inside the same js folder
+    // this function reads each pixel and passes its x y location to a custom
+    // data point object, which converts the x y to 3D point in an spheric system
+    // the points contain x y location in 2D geo system(lon lat) as well as 3D xyz
+    // as well as a value, which is just the brightness of each pixel
+    // once the pixel is handeld an object is created and pushed into the list in the draw we access
+    // this list and iterate through each of the data points in order to visualize them or interact
+    // from co2
+    dataFromTIFFtoArray(co2, pntsFromTIFF_co2, 5.0)
+    // from rfrst
+    dataFromTIFFtoArray(refrst, pntsFromTIFF_refrst, 1.0)
 
     // tableControl = new CenterControl(320,475)
 }
@@ -209,14 +213,14 @@ function draw() {
     showVectorMap(pointsEarth, screenPointsEarth, color(255, 255, 255))
     easycam.setCenter([0, 0, 0], 0.0);
     // here we call the function visualize and pass the desired arraylist
- 	// which will iterate through each data point and visualize it
- 	// the flag is a boolean to display or hide the visualization
- 	if(flagCO2Data){
-    visualizeDataFromTIFF(pntsFromTIFF_co2,flagDataVisStyleCO2, color(255,0,0))
-  }
-  if(flagRfrsData){
-    visualizeDataFromTIFF(pntsFromTIFF_refrst,flagDataVisStyleRfrst, color(0,255,100))
-  }
+    // which will iterate through each data point and visualize it
+    // the flag is a boolean to display or hide the visualization
+    if (flagCO2Data) {
+        visualizeDataFromTIFF(pntsFromTIFF_co2, flagDataVisStyleCO2, color(255, 0, 0))
+    }
+    if (flagRfrsData) {
+        visualizeDataFromTIFF(pntsFromTIFF_refrst, flagDataVisStyleRfrst, color(0, 255, 100))
+    }
 }
 
 /**
@@ -276,92 +280,93 @@ function show3D() {
 }
 
 function show2d() {
-	let testPoint = screenPosition(tPS.x, tPS.y, tPS.z)
-	let testPoint2 = screenPosition(tPE.x, tPE.y, tPE.z)
-	let user = createVector(mouseX - windowWidth/2,mouseY - windowHeight/2)
-	// in case the touch display or device is available use the touchX instead
-	if(isTouch ){
-		user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
-	}
-	// console.log(user.x , user.y)
-	let testPoint2Ref = createVector(testPoint2.x,testPoint2.y)
-	easycam.beginHUD()
+    let testPoint = screenPosition(tPS.x, tPS.y, tPS.z)
+    let testPoint2 = screenPosition(tPE.x, tPE.y, tPE.z)
+    let user = createVector(mouseX - windowWidth / 2, mouseY - windowHeight / 2)
+    // in case the touch display or device is available use the touchX instead
+    if (isTouch) {
+        user = createVector(touchX - windowWidth / 2, touchY - windowHeight / 2)
+    }
+    // console.log(user.x , user.y)
+    let testPoint2Ref = createVector(testPoint2.x, testPoint2.y)
+    easycam.beginHUD()
 
     drawEvents();
 
-	if(isTouch){
-		fill(0,0,255,100)
-		circle(touchX,touchY,50)
-	}
-	fill(255,0,0)
-	noStroke()
-	if(user.dist(testPoint)<55){
-		circle(-testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 10)
-	}else{	
-		circle(-testPoint.x + windowWidth/2, testPoint.y + windowHeight/2, 1)
-	}
-	if(user.dist(testPoint2)<55){
-		circle(-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 10)
-	}else{	
-		circle(-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2, 1)
-	}
-	stroke(255,0,0)
-	strokeWeight(0.5)
-	line(-testPoint.x + windowWidth/2, testPoint.y +windowHeight/2,-testPoint2.x + windowWidth/2, testPoint2.y + windowHeight/2 )
+    if (isTouch) {
+        fill(0, 0, 255, 100)
+        circle(touchX, touchY, 50)
+    }
+    fill(255, 0, 0)
+    noStroke()
+    if (user.dist(testPoint) < 55) {
+        circle(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 10)
+    } else {
+        circle(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, 1)
+    }
+    if (user.dist(testPoint2) < 55) {
+        circle(-testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 10)
+    } else {
+        circle(-testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2, 1)
+    }
+    stroke(255, 0, 0)
+    strokeWeight(0.5)
+    line(-testPoint.x + windowWidth / 2, testPoint.y + windowHeight / 2, -testPoint2.x + windowWidth / 2, testPoint2.y + windowHeight / 2)
 
-    if(trackedDevices.length>0){
+    if (trackedDevices.length > 0) {
 
-		trackedDevices.forEach( element => {
-			element.calculateRange()
-			// uncomment this if the tableControl object is available
-			// tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
-		})
+        trackedDevices.forEach(element => {
+            element.calculateRange()
+            // uncomment this if the tableControl object is available
+            // tableControl.interact(element.smoothPosition.x,element.smoothPosition.y,element.smoothRotation,element.uniqueId)
+        })
 
-		// you can rename this trackedDevices - call them tokens for instance
-		trackedDevices.forEach(element =>{
-			if(element.inRange){
-				element.show()	
-				fill(200,0,0)
-				ellipse(element.smoothPosition.x + 100, element.smoothPosition.y+100, 20,20)
-				// if(elemnt.uniqueId == 52){ /* example of a loop accessing an specific uniqueId  to do something specific */}
-				// access the identifier : element.identifier // changes everytime you add or create a new object on screen
-				// access the uniqueId : element.uniqueId // stays the same always for each tracked object
-				text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
-			}
-			updateHTML(element.smoothPosition.x, element.smoothPosition.x, element.uniqueId)
-		})
-	}
-	easycam.endHUD()
+        // you can rename this trackedDevices - call them tokens for instance
+        trackedDevices.forEach(element => {
+            if (element.inRange) {
+                element.show()
+                fill(200, 0, 0)
+                ellipse(element.smoothPosition.x + 100, element.smoothPosition.y + 100, 20, 20)
+                // if(elemnt.uniqueId == 52){ /* example of a loop accessing an specific uniqueId  to do something specific */}
+
+                // access the identifier : element.identifier // changes everytime you add or create a new object on screen
+                // access the uniqueId : element.uniqueId // stays the same always for each tracked object
+                text(element.uniqueId, element.smoothPosition.x + 120, element.smoothPosition.y + 120)
+            }
+            updateHTML(element.smoothPosition.x, element.smoothPosition.x, element.uniqueId)
+        })
+    }
+    easycam.endHUD()
 }
 
 // this function creates an HTML div element assigns the class trackedDivs to it, passes the uniqueId as id and adds some text inside
-function createHTML(id){
-	let testDiv = document.createElement("div")   // creating a new div
-	testDiv.className = "trackedDivs"
-	testDiv.innerHTML = "I'm a new div"
-	testDiv.id = id           
-	document.body.appendChild(testDiv)
+function createHTML(id) {
+    let testDiv = document.createElement("div") // creating a new div
+    testDiv.className = "trackedDivs"
+    testDiv.innerHTML = "I'm a new div"
+    testDiv.id = id
+    document.body.appendChild(testDiv)
 }
 // this function update the position and labesl of the tracked devices
-function updateHTML(x_pos, y_pos,tracked_id){
-	let trackedDivs = document.getElementsByClassName("trackedDivs")
-	Array.prototype.forEach.call(trackedDivs, function(element) {
-		if(element.id == tracked_id){
-			element.style.left = x_pos+'px';
-			element.style.top = y_pos+'px';
-		}
-	})
+function updateHTML(x_pos, y_pos, tracked_id) {
+    let trackedDivs = document.getElementsByClassName("trackedDivs")
+    Array.prototype.forEach.call(trackedDivs, function (element) {
+        if (element.id == tracked_id) {
+            element.style.left = x_pos + 'px';
+            element.style.top = y_pos + 'px';
+        }
+    })
 }
 // this function destroys the html elements which are not used anymore, to avoid accumulating appended children
-function destroyHTML(tracked_id){
-	// should remove the HTML elements from past tracked devices that are not in use any more
-	let trackedDivs = document.getElementsByClassName("trackedDivs")
-	Array.prototype.forEach.call(trackedDivs, function(element) {
-		if(element.id == tracked_id){
-			// search for a function to actually remove an element from HTML
-			element.remove()
-		}
-	})
+function destroyHTML(tracked_id) {
+    // should remove the HTML elements from past tracked devices that are not in use any more
+    let trackedDivs = document.getElementsByClassName("trackedDivs")
+    Array.prototype.forEach.call(trackedDivs, function (element) {
+        if (element.id == tracked_id) {
+            // search for a function to actually remove an element from HTML
+            element.remove()
+        }
+    })
 }
 
 function windowResized() {

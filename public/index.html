@@ -1,68 +1,128 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title> Earth Viewer </title>
-		<script src="https://unpkg.com/rxjs@6.6.3/bundles/rxjs.umd.min.js"></script>
-		<script src="libraries/socket.io.js"></script>
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> -->
-		<script src="libraries/p5.min.js"></script>
-		<script src="libraries/p5.easycam.min.js"></script>
-		<script src="libraries/addScreenPositionFunction.js"></script>
-		<script src="js/projectDrawDown.js"></script>
-		<script src="js/events.js"></script>
-		<script src="js/fullscreen.js"></script>
-		<script src="js/PointOfInterest.js"></script>
-		<script src="js/TrackedDevice.js"></script>
-		<script src="js/Triangle.js"></script>
-		<script src="js/Label.js"></script>
-		<script src="js/utils.js"></script>
-		<script src="js/interactionHandler.js"></script>
-		<script src="js/visualizer.js"></script>
-    	<script src="js/sketch_extend.js"></script>
-		<script src="js/sketch.js"></script>
-		<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-		<link href="css/style.css" rel="stylesheet">
-	</head>
-	<body>
 
-		<div id="testLabel">
-			<p>Earth Viewer Test</p>
-		</div>
+<head>
+    <meta charset="utf-8">
+    <title> Earth Viewer </title>
+    <script src="https://unpkg.com/rxjs@6.6.3/bundles/rxjs.umd.min.js"></script>
+    <script src="libraries/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> -->
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.easycam.min.js"></script>
+    <script src="libraries/addScreenPositionFunction.js"></script>
+    <script src="js/projectDrawDown.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/fullscreen.js"></script>
+    <script src="js/PointOfInterest.js"></script>
+    <script src="js/TrackedDevice.js"></script>
+    <script src="js/Triangle.js"></script>
+    <script src="js/Label.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/interactionHandler.js"></script>
+    <script src="js/visualizer.js"></script>
+    <script src="js/sketch_extend.js"></script>
+    <script language="javascript" type="text/javascript" src="js/tokenHexagon.js"></script>
+    <script src="js/sketch.js"></script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="css/style.css" rel="stylesheet">
+</head>
 
-		<div id="info">
-			<p id="frameRateDisplay">
+<body>
 
-			</p>
-			<p>
-				Press key "V" to display vector map
-			</p>
-			<p>
-				Press key "M" to display Earth map
-			</p>
-			<p>
-				Press key "P" to display points of interest(future cities in this case)
-			</p>
-			<p>
-				Press key "F" to fullscreen and esc to go back
-			</p>
-			<p>
-				Press key "C" to hide the CO2 vis
-			</p>
-			<p>
-				Press key "K" to swap the CO2 vis mode
-			</p>
-			<p>
-				Press key "R" to hide the Reforest vis 
-			</p>
-			<p>
-				Press key "L" to swap the Reforest vis mode
-			</p>
+    <div id="testLabel">
+        <p>Earth Viewer Test</p>
+    </div>
 
-		</div>
+    <div id="info">
+        <p id="frameRateDisplay">
+
+        </p>
+        <p>
+            Press key "V" to display vector map
+        </p>
+        <p>
+            Press key "M" to display Earth map
+        </p>
+        <p>
+            Press key "P" to display points of interest(future cities in this case)
+        </p>
+        <p>
+            Press key "F" to fullscreen and esc to go back
+        </p>
+        <p>
+            Press key "C" to hide the CO2 vis
+        </p>
+        <p>
+            Press key "K" to swap the CO2 vis mode
+        </p>
+        <p>
+            Press key "R" to hide the Reforest vis
+        </p>
+        <p>
+            Press key "L" to swap the Reforest vis mode
+        </p>
+
+    </div>
+    <div id="first" class="infobox">
+        <div id="text1">
+            <h1>FOOD AGRICOLTURE LAND</h1>
+            <p id="border1">
+                204.2–273.9 GIGATONS<br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+    </div>
+    <div id="second" class="infobox">
+        <div id="line2"></div>
+        <div id="text2">
+            <h1>INDUSTRY</h1>
+            <div id="border2"></div>
+            <p>
+                128.8–143.8 GIGATONS <br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+    </div>
+    <div id="third" class="infobox">
+        <div id="line3"></div>
+        <div id="text3">
+            <h1>ELECTRICITY</h1>
+            <div id="border3"></div>
+            <p>200.6–440.2 GIGATONS<br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+    </div>
+    <div id="fourth" class="infobox">
+        <div id="text4">
+            <h1>LAND SINKS</h1>
+            <div id="border4"></div>
+            <p>243.1–387.8 GIGATONS<br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+
+    </div>
+    <div id="fifth" class="infobox">
+        <div id="line5"></div>
+        <div id="text5">
+            <h1>BUILDINGS</h1>
+            <div id="border5"></div>
+            <p>73.7–141.2 GIGATONS<br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+    </div>
+    <div id="sixth" class="infobox">
+        <div id="line6"></div>
+        <div id="text6">
+            <h1>TRANSPORTATION</h1>
+            <div id="border6"></div>
+            <p>58–97.4 GIGATONS<br> CO2 EQUIVALENT<br> REDUCED / SEQUESTERED<br> (2020–2050)
+            </p>
+        </div>
+    </div>
 
 
 
-	</body>
+
+
+</body>
+
 </html>

@@ -116,15 +116,17 @@ let cummulativePercentage = 0.0;
 
 //clock wise count up / counter clock count down
 function setAmountOfActiveSector(oldRotation, newRotation) {
-    if ((newRotation < oldRotation || oldRotation < 100 && newRotation > 250) && getActivePercentageOfActiveSector() < 100) {
-        projectDrawDown[activeSector].activePercentage = getActivePercentageOfActiveSector() + 1;
-        updateCummulativePercentage();
-    } else if (oldRotation !== newRotation && getActivePercentageOfActiveSector() > 0) {
-        projectDrawDown[activeSector].activePercentage = getActivePercentageOfActiveSector() - 1;
-        updateCummulativePercentage();
+    if (abs(oldRotation-newRotation) > 2) {
+        if ((newRotation < oldRotation || oldRotation < 100 && newRotation > 250) && getActivePercentageOfActiveSector() < 100) {
+            projectDrawDown[activeSector].activePercentage = getActivePercentageOfActiveSector() + 1;
+            updateCummulativePercentage();
+        } else if (oldRotation !== newRotation && getActivePercentageOfActiveSector() > 0) {
+            projectDrawDown[activeSector].activePercentage = getActivePercentageOfActiveSector() - 1;
+            updateCummulativePercentage();
 
+        }
+        updatePercentage();
     }
-    updatePercentage();
 }
 
 function updatePercentage() {

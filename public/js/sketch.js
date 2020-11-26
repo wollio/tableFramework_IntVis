@@ -125,6 +125,11 @@ function setup() {
     document.getElementById("restart").addEventListener("click", () => {
         resetProjectDrawdown()
     });
+
+    document.getElementById('allTo100').addEventListener("click", () => {
+        setAllProjectDrawdown();
+    });
+
     colorBlue = color(0, 0, 255);
 
     // resizing / downscaling the resolution of the image-data

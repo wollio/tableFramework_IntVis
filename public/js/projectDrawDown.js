@@ -148,13 +148,21 @@ function updatePercentage() {
 }
 
 function resetProjectDrawdown(){
-    
     Object.keys(projectDrawDown).forEach(key => {
         projectDrawDown[key].activePercentage=0;
     });
-    
-    
+    updatePercentage();
+    updateCummulativePercentage();
 }
+
+function setAllProjectDrawdown() {
+    Object.keys(projectDrawDown).forEach(key => {
+        projectDrawDown[key].activePercentage= 100;
+    });
+    updatePercentage();
+    updateCummulativePercentage();
+}
+
 /**
  *  updates the cummulative activePercentage value of each sector taking the total potential into account
  */
